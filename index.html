@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía de UK y Dublin 2025</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5; /* Light gray background */
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        /* Header Animation */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animated-header {
+            animation: fadeInDown 0.8s ease-out forwards;
+        }
+
+        /* Region Buttons */
+        .region-button {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 700; /* Bolder for main regions */
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+            border: 1px solid transparent;
+            background-color: #4f46e5; /* Indigo 600 for regions */
+            color: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .region-button.active {
+            background-color: #3b82f6; /* Lighter blue for active region */
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        .region-button:not(.active):hover {
+            background-color: #6366f1; /* Indigo 500 on hover */
+            color: #ffffff;
+        }
+
+        /* Day Buttons (Sub-navigation) */
+        .day-button {
+            padding: 0.6rem 1.2rem; /* Slightly smaller than region buttons */
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+            border: 1px solid transparent;
+            background-color: #e5e7eb; /* Gray 200 */
+            color: #374151; /* Dark gray text */
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+        .day-button.active {
+            background-color: #3b82f6; /* Tailwind blue-500 */
+            color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .day-button:not(.active):hover {
+            background-color: #d1d5db; /* Gray 300 */
+            color: #1f2937; /* Even darker gray */
+        }
+
+        .itinerary-item {
+            background-color: white;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-md */
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: transform 0.2s ease-in-out;
+            border-left: 4px solid #6366f1; /* Indigo 500 border */
+        }
+        .itinerary-item:hover {
+            transform: translateY(-5px);
+        }
+        .map-link {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background-color: #10b981; /* Tailwind emerald-500 */
+            color: white;
+            border-radius: 0.5rem; /* rounded-lg */
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.2s ease-in-out;
+        }
+        .map-link:hover {
+            background-color: #059669; /* Tailwind emerald-600 */
+        }
+
+        .section-title {
+            color: #1e3a8a; /* Darker blue for titles, from Gales code */
+            font-size: 2.25rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .itinerary-item h3 {
+            color: #4338ca; /* Indigo 700 */
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .itinerary-item p {
+            margin-bottom: 0.5rem;
+        }
+        .itinerary-item a {
+            color: #3b82f6; /* Blue 500 */
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .itinerary-item a:hover {
+            text-decoration: underline;
+        }
+        .family-friendly-tag {
+            background-color: #d1fae5; /* Light green */
+            color: #065f46; /* Dark green */
+            font-weight: 600;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            margin-left: 0.5rem;
+            display: inline-block;
+        }
+
+        @media (max-width: 768px) {
+            .nav-main, .nav-days { /* Apply flex-direction column to both navs on small screens */
+                flex-direction: column;
+            }
+            .region-button, .day-button {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased">
+    <header class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white p-6 shadow-lg rounded-b-xl animated-header">
+        <div class="container text-center">
+            <h1 class="text-4xl font-bold mb-2 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8 mr-3">
+                    <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6a.75.75 0 0 0 .75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd" />
+                    <path d="M12 2.25a9.75 9.75 0 1 0 0 19.5 9.75 9.75 0 0 0 0-19.5ZM12.75 6a.75.75 0 0 0-1.5 0v6a.75.75 0 0 0 .75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" />
+                </svg>
+                Guía Interactiva: Aventura Familiar por UK y Dublin
+            </h1>
+            <p class="text-lg">¡Prepárense para un viaje inolvidable! Aquí encontrarán su itinerario detallado, con información clave, enlaces útiles y mapas para cada día.</p>
+        </div>
+    </header>
+
+    <main class="flex-grow container py-8">
+        <!-- Region Navigation -->
+        <nav class="mb-4 flex flex-wrap justify-center gap-4 nav-main">
+            <button class="region-button" data-region="london">Londres</button>
+            <button class="region-button" data-region="englandRural">Inglaterra Rural</button>
+            <button class="region-button" data-region="wales">Gales</button>
+            <button class="region-button" data-region="lakeDistrict">Lake District</button>
+            <button class="region-button" data-region="scotland">Escocia</button>
+            <button class="region-button" data-region="dublin">Dublín</button>
+        </nav>
+
+        <!-- Day Navigation (Dynamically loaded) -->
+        <nav id="day-buttons-container" class="mb-8 flex flex-wrap justify-center gap-2 nav-days">
+            <!-- Day buttons will be inserted here by JavaScript -->
+        </nav>
+
+        <div id="itinerary-content">
+            <!-- Content for each day will be loaded here by JavaScript -->
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 text-center rounded-t-xl mt-8">
+        <p>© 2025 Guía de Viaje por UK y Dublin. ¡Disfruta tu aventura!</p>
+    </footer>
+
+    <script>
+        const itineraryData = {
+            london: {
+                name: "Londres",
+                days: {
+                    day1: {
+                        title: "Día 1: Viernes 27 de junio - Vuelo Panamá a Ámsterdam",
+                        mapLink: "https://www.google.com/maps/search/?api=1&query=Westminster+London", // Placeholder map link for travel day
+                        activities: [
+                            { time: "18:50", name: "Vuelo KLM Panamá (PTY) - Ámsterdam (AMS)", description: "Inicio de su aventura con el vuelo de KLM desde Ciudad de Panamá a Ámsterdam. El vuelo cruza el océano de noche. R:KLSENN / R:KN8UEK" }
+                        ]
+                    },
+                    day2: {
+                        title: "Día 2: Sábado 28 de junio - Llegada a Londres y Primer Contacto",
+                        mapLink: "https://www.google.com/maps/search/?api=1&query=Westminster+London", // Placeholder map link for London
+                        activities: [
+                            { time: "12:10 - 13:15", name: "Transbordo en Ámsterdam", description: "Tiempo para el transbordo en el aeropuerto de Ámsterdam." },
+                            { time: "13:25 - 13:50", name: "Vuelo KLM Ámsterdam (AMS) - Londres, Heathrow Airport (LHR)", description: "Continuación del viaje con el vuelo de KLM a Londres. R:KL5ENN / R:KNBUEK" },
+                            { time: "15:00 - 16:00", name: "Tren/Metro del Aeropuerto al Apartamento", description: "Traslado desde el aeropuerto de Heathrow a su alojamiento. Recuerden sacar las tarjetas de transporte público (Oyster Card o Contactless Payment) para moverse por Londres." },
+                            { time: "15:00", name: "Check-in en Delightful Tower Bridge Apartment", description: "Llegada y check-in en su alojamiento: Delightful Tower Bridge Apartment Sleeps 6 by Booking.com. R:4326350701, PIN:2961. El check-in es a partir de las 15:00." },
+                            { time: "Tarde", name: "Compras de supermercado", description: "Realicen las compras necesarias en un supermercado cercano para abastecerse." },
+                            { time: "Tarde", name: "Paseo por los alrededores de Londres", description: "Salgan a dar un primer paseo relajado por los alrededores de su alojamiento en Londres para empezar a familiarizarse con la zona." },
+                            { time: "18:00", name: "Regreso al hospedaje", description: "Regreso al apartamento para descansar y disfrutar de la cena." }
+                        ]
+                    },
+                    day3: {
+                        title: "Día 3: Domingo 29 de junio - Westminster y South Bank",
+                        mapLink: "https://www.google.com/maps/search/?api=1&query=Westminster+London",
+                        activities: [
+                            { time: "09:30 - 10:00 AM", name: "Salida desde Eastlight Apartments", description: "Comienza tu día con un corto trayecto en transporte público hacia el corazón de Londres. Prepárate para un día lleno de historia y vistas icónicas." },
+                            { time: "10:00 - 11:30 AM", name: "Buckingham Palace - Cambio de Guardia", description: "Sé testigo de la famosa ceremonia del Cambio de Guardia en la residencia oficial de la monarquía británica. **Imprescindible:** Asegúrate de llegar temprano (al menos 45-60 minutos antes) para conseguir una buena posición frente a las rejas del palacio y ver la banda y los guardias. Observa la fachada del palacio y las icónicas puertas doradas.", links: [{ text: "Palacio de Buckingham (Info)", url: "https://www.rct.uk/visit/buckingham-palace" }, { text: "Cambio de Guardia (Horarios)", url: "https://www.householddivision.org.uk/trooping-the-colour" }] },
+                            { time: "11:30 AM - 12:00 PM", name: "Parliament Street (The Horse Guards)", description: "Admira a los impresionantes guardias a caballo en su puesto ceremonial en Horse Guards Parade. **Imprescindible:** Observa de cerca los detalles de sus uniformes y la disciplina de los caballos. Es un lugar excelente para fotos y está a poca distancia del palacio.", links: [{ text: "The Household Cavalry Museum", url: "https://www.householdcavalrymuseum.org.uk/" }] },
+                            { time: "12:00 PM - 01:00 PM", name: "Paseo por St. James's Park", description: "Disfruta de un relajante paseo por uno de los parques reales más hermosos de Londres. **Imprescindible:** Busca los famosos pelícanos en el lago y las pintorescas vistas del Palacio de Buckingham y Horse Guards Parade a lo lejos. Un oasis de tranquilidad en la ciudad.", links: [{ text: "St. James's Park (Info)", url: "https://www.royalparks.org.uk/parks/st-jamess-park" }] },
+                            { time: "01:00 PM - 02:00 PM", name: "Big Ben y Westminster Bridge", description: "Cruza el icónico Puente de Westminster para obtener vistas espectaculares del Big Ben (Elizabeth Tower) y el Palacio de Westminster (Parlamento). **Imprescindible:** Toma fotos desde el puente con el Big Ben de fondo y admira la arquitectura gótica del Parlamento. El sonido de las campanas del Big Ben es inconfundible.", links: [{ text: "Parlamento Británico (Big Ben)", url: "https://www.parliament.uk/about/living-heritage/building/palace/big-ben/" }] },
+                            { time: "02:00 PM - 02:50 PM", name: "Almuerzo cerca de Westminster Abbey", description: "Una pausa para recargar energías con un almuerzo rápido en los alrededores de la Abadía de Westminster. Hay varias opciones de cafés y pequeños restaurantes." },
+                            { time: "02:50 PM - 03:45 PM", name: "Westminster Abbey - Ceremonia de Evensong (15:00 h / 3 PM)", description: "Asiste a la emotiva ceremonia de Evensong en esta histórica abadía, un momento de reflexión y música coral. **Imprescindible:** La entrada a la ceremonia es gratuita y te permite experimentar la majestuosidad del interior de la Abadía de una manera única, aunque no sea un tour turístico completo. Llega unos 10-15 minutos antes para asegurar asiento.", links: [{ text: "Westminster Abbey (Calendario)", url: "https://www.westminster-abbey.org/worship-music/services-calendar" }, { text: "Westminster Abbey (Visitas)", url: "https://www.westminster-abbey.org/visit-us" }] },
+                            { time: "03:45 PM - 04:15 PM", name: "Visita breve 'imperdible' en Westminster Abbey (Opcional)", description: "Si el tiempo y las regulaciones lo permiten después de Evensong, realiza una visita rápida a los puntos más destacados del interior de la Abadía, como el Rincón de los Poetas o la nave principal, para apreciar su arquitectura y significado histórico." },
+                            { time: "04:15 PM - 05:45 PM", name: "London Eye", description: "Disfruta de una perspectiva única de Londres desde lo alto de esta famosa noria gigante. **Imprescindible:** Las vistas panorámicas de 360 grados son espectaculares, permitiéndote ver el Big Ben, el Parlamento, la Catedral de San Pablo y muchos otros monumentos desde el aire, especialmente hermoso al atardecer.", links: [{ text: "London Eye (Reserva)", url: "https://www.londoneye.com/" }] },
+                            { time: "05:45 PM - 07:00 PM", name: "Paseo/Crucero por el Támesis", description: "Relájate con un paseo en barco por el río Támesis. **Imprescindible:** Obtén una vista diferente de Londres, pasando por debajo de puentes históricos y viendo monumentos como la Torre de Londres y el Tower Bridge desde el agua. Es una forma cómoda de descansar los pies.", links: [{ text: "City Cruises (Reserva)", url: "https://www.cityexperiences.com/london/city-cruises/" }, { text: "Uber Boat by Thames Clippers", url: "https://www.thamesclippers.com/" }] },
+                            { time: "07:00 PM - 08:00 PM", name: "Leake Street Arches (Graffiti Tunnel)", description: "Explora esta vibrante galería de arte callejero subterránea, donde artistas de graffiti crean constantemente nuevas obras. **Imprescindible:** Camina por el túnel y admira la explosión de colores y la creatividad en constante cambio. Un contraste moderno y alternativo con la historia del día." },
+                            { time: "08:00 PM en adelante", name: "Cena y regreso a Eastlight Apartments.", description: "Disfruta de una cena relajada en un restaurante local y regresa a tu alojamiento para descansar después de un día intenso." }
+                        ]
+                    },
+                    day4: {
+                        title: "Día 4: Lunes 30 de junio - Soho, Covent Garden y Piccadilly",
+                        mapLink: "https://www.google.com/maps/search/?api=1&query=Soho+London",
+                        activities: [
+                            { time: "09:30 AM - 10:00 AM", name: "Salida desde Eastlight Apartments", description: "Comienza tu día dirigiéndote al animado centro de Londres, una zona llena de entretenimiento y vida urbana." },
+                            { time: "10:00 AM - 10:45 AM", name: "Trafalgar Square", description: "Visita esta famosa plaza, un centro neurálgico de Londres. **Imprescindible:** Admira la Columna de Nelson, las imponentes fuentes y los cuatro leones de bronce. La National Gallery domina un lado de la plaza, y a menudo hay artistas callejeros o eventos.", links: [{ text: "Trafalgar Square (Info)", url: "https://www.visitlondon.com/things-to-do/sightseeing/landmark/trafalgar-square" }] },
+                            { time: "10:45 AM - 11:30 AM", name: "Outernet (Proyección Colorida)", description: "Sumérgete en una experiencia visual futurista con proyecciones digitales envolventes en este espacio público innovador. **Imprescindible:** Déjate sorprender por las gigantescas pantallas LED que muestran arte digital dinámico y espectáculos de luz. Es una parada rápida pero impactante.", links: [{ text: "Outernet London (Info)", url: "https://www.outernetglobal.com/london/" }] },
+                            { time: "11:30 AM - 12:30 PM", name: "Leicester Square, Chinatown y Piccadilly Circus", description: "Pasea por el vibrante Leicester Square, conocido por sus estrenos de cine, luego déjate llevar por los aromas y colores de Chinatown, y finalmente admira las icónicas pantallas luminosas de Piccadilly Circus. **Imprescindible:** En Chinatown, observa las tradicionales puertas chinas y los farolillos rojos. En Piccadilly Circus, la energía de las pantallas gigantes y la estatua de Eros son el centro de atención.", links: [{ text: "Chinatown London (Info)", url: "https://chinatown.co.uk/" }, { text: "Piccadilly Circus (Info)", url: "https://www.visitlondon.com/things-to-do/sightseeing/landmark/piccadilly-circus" }] },
+                            { time: "12:30 PM - 01:00 PM", name: "Regent Street (Opcional: tiendas)", description: "Disfruta de un paseo por esta elegante calle comercial, conocida por su arquitectura curva y sus tiendas insignia de marcas de lujo y moda. Ideal para un poco de 'window shopping'." },
+                            { time: "01:00 PM - 02:00 PM", name: "Almuerzo en Soho o cerca.", description: "Explora las diversas opciones gastronómicas en el animado barrio del Soho, desde comida rápida hasta restaurantes más elaborados. Es el lugar perfecto para un almuerzo cosmopolita." },
+                            { time: "02:00 PM - 03:30 PM", name: "Soho (Exploración, The Poppies y Cahoots Underground)", description: "Sumérgete en el ambiente bohemio y vibrante del Soho, conocido por sus teatros, bares y vida nocturna. **Imprescindible:** Explora sus calles estrechas, busca murales o arte callejero, y si te interesa, admira la fachada de 'Cahoots Underground', un bar temático único con una entrada de estación de metro de la Segunda Guerra Mundial.", links: [{ text: "Soho (Info)", url: "https://www.visitlondon.com/things-to-do/sightseeing/london-areas/soho" }, { text: "Cahoots (Info)", url: "https://www.cahoots-london.com/" }] },
+                            { time: "03:30 PM - 05:30 PM", name: "Covent Garden y Seven Dials Market", description: "Disfruta de los artistas callejeros, las boutiques únicas y explora el bullicioso Seven Dials Market, un paraíso para los amantes de la comida. **Imprescindible:** En Covent Garden, observa a los talentosos artistas callejeros en la plaza principal y explora las tiendas artesanales. En Seven Dials Market, déjate llevar por la variedad de puestos de comida y bebida en un ambiente industrial chic.", links: [{ text: "Covent Garden (Info)", url: "https://www.coventgarden.london/" }, { text: "Seven Dials Market (Info)", url: "https://www.sevendialsmarket.com/" }] },
+                            { time: "05:30 PM - 06:00 PM", name: "Neal's Yard", description: "Descubre este pintoresco y colorido patio escondido, un oasis de tranquilidad con tiendas y cafés independientes. **Imprescindible:** Es un lugar ideal para una foto rápida gracias a sus fachadas de colores brillantes y su ambiente bohemio. Un pequeño tesoro escondido.", links: [{ text: "Neal's Yard (Info)", url: "https://www.atlasobscura.com/places/neals-yard" }] },
+                            { time: "06:00 PM - 07:00 PM", name: "Mayfair (Paseo)", description: "Pasea por el elegante barrio de Mayfair, conocido por sus galerías de arte, tiendas de lujo y arquitectura georgiana. **Imprescindible:** Simplemente para apreciar el ambiente de exclusividad y la belleza de sus edificios. Es un paseo relajado para terminar la tarde.", links: [{ text: "Mayfair (Info)", url: "https://www.visitlondon.com/things-to-do/sightseeing/london-areas/mayfair" }] },
+                            { time: "07:00 PM en adelante", name: "Cena y regreso a Eastlight Apartments.", description: "Disfruta de una cena en uno de los muchos restaurantes de la zona o regresa a tu alojamiento para una noche más tranquila." }
+                        ]
+                    },
+                    day5: {
+                        title: "Día 5: Martes 1 de julio - La City de Londres y las Torres",
+                        mapLink: "https://www.google.com/maps/search/?api=1&query=Tower+of+London",
+                        activities: [
+                            { time: "09:30 AM - 10:00 AM", name: "Salida desde Eastlight Apartments", description: "Comienza tu día con un corto paseo desde tu alojamiento hasta la histórica Torre de Londres, aprovechando la cercanía para llegar temprano." },
+                            { time: "10:00 AM - 12:00 PM", name: "Tower of London (2 horas)", description: "Explora esta fortaleza histórica, Patrimonio de la Humanidad por la UNESCO. **Imprescindible:** Visita las Joyas de la Corona, admira la Torre Blanca (la estructura original), y si tienes suerte, coincide con un tour guiado por un Yeoman Warder (Beefeater) para escuchar historias fascinantes y a menudo macabras. No olvides buscar a los cuervos.", links: [{ text: "Tower of London (Reserva)", url: "https://www.hrp.org.uk/tower-of-london/" }] },
+                            { time: "12:00 PM - 01:30 PM", name: "Tower Bridge (1.5 horas - con exposición)", description: "Cruza y explora el icónico Tower Bridge, una obra maestra de la ingeniería victoriana. **Imprescindible:** Camina por las pasarelas superiores con suelo de cristal para vistas vertiginosas del Támesis y la ciudad, y visita las históricas salas de máquinas victorianas que explican cómo funciona el puente. Consulta los horarios de apertura del puente si te interesa verlo levantarse.", links: [{ text: "Tower Bridge Exhibition (Reserva)", url: "https://www.towerbridge.org.uk/plan-your-visit/buy-tickets" }] },
+                            { time: "01:30 PM - 02:30 PM", name: "Almuerzo cerca de Tower Bridge o en la City.", description: "Disfruta de un almuerzo en los alrededores de estas históricas atracciones o adéntrate un poco más en la City para encontrar opciones." },
+                            { time: "02:30 PM - 03:00 PM", name: "St. Dunstan in the East (Iglesia Abandonada)", description: "Descubre este pintoresco jardín público construido entre las ruinas de una antigua iglesia bombardeada durante la Segunda Guerra Mundial. **Imprescindible:** Es un oasis de paz y belleza, con enredaderas cubriendo las paredes de la iglesia y creando un ambiente mágico. Perfecto para una pausa tranquila y fotos únicas.", links: [{ text: "St. Dunstan in the East (Info)", url: "https://www.cityoflondon.gov.uk/things-to-do/green-spaces/city-gardens/st-dunstan-in-the-east" }] },
+                            { time: "03:00 PM - 04:30 PM", name: "Sky Garden", description: "Sube a este jardín público en lo alto de un rascacielos (el 'Walkie Talkie') para disfrutar de impresionantes vistas panorámicas de Londres. **Imprescindible:** Las vistas de 360 grados son espectaculares y gratuitas (con reserva previa). Disfruta de la exuberante vegetación y los miradores. ¡Recuerda reservar tu entrada con mucha antelación, ya que se agotan rápidamente!", links: [{ text: "Sky Garden (Reserva)", url: "https://skygarden.london/booking/" }] },
+                            { time: "04:30 PM - 05:00 PM", name: "Millennium Bridge", description: "Pasea por este moderno puente peatonal que conecta la Tate Modern con la Catedral de San Pablo. **Imprescindible:** Ofrece vistas icónicas del Támesis, el Globe Theatre de Shakespeare y, por supuesto, una perspectiva frontal perfecta de la Catedral de San Pablo al cruzar.", links: [{ text: "Millennium Bridge (Info)", url: "https://www.visitlondon.com/things-to-do/sightseeing/landmark/millennium-bridge" }] },
+                            { time: "05:00 PM - 06:30 PM", name: "St Paul's Cathedral", description: "Visita la magnífica Catedral de San Pablo, una obra maestra arquitectónica diseñada por Sir Christopher Wren. **Imprescindible:** Admira la impresionante cúpula desde el interior, sube a la Galería de los Susurros (si está abierta y tienes tiempo), y explora la cripta donde descansan figuras históricas como Nelson y Wellington.", links: [{ text: "St Paul's Cathedral (Reserva)", url: "https://www.stpauls.co.uk/plan-your-visit" }] },
+                            { time: "06:30 PM en adelante", name: "Cena y regreso a Eastlight Apartments.", description: "Disfruta de una cena relajada en la vibrante City o regresa a tu alojamiento." }
+                        ]
+                    },
+                    day6: {
+                        title: "Día 6: Miércoles 2 de julio - Museos y el Oeste de Londres",
+                        mapLink: "https://www.google.com/maps/search/?api=1&query=Natural+History+Museum+London",
+                        activities: [
+                            { time: "09:30 AM - 10:00 AM", name: "Salida desde Eastlight Apartments", description: "Viaja en transporte público hacia el área de South Kensington, hogar de varios museos de clase mundial." },
+                            { time: "10:00 AM - 12:00 PM", name: "Natural History Museum (2 horas)", description: "Explora las maravillas del mundo natural en este impresionante museo, famoso por su arquitectura neogótica. **Imprescindible:** Visita la Sala Hintze con el esqueleto de ballena azul, la icónica Sala de los Dinosaurios (con el T-Rex animatrónico) y la fascinante Sala de la Tierra. Es un museo interactivo y educativo.", links: [{ text: "Natural History Museum (Reserva)", url: "https://www.nhm.ac.uk/visit.html" }] },
+                            { time: "12:00 PM - 01:00 PM", name: "Almuerzo cerca del museo o en el propio museo.", description: "Disfruta de un almuerzo en las cercanías del museo. Hay varias opciones de cafeterías y restaurantes en South Kensington." },
+                            { time: "01:00 PM - 02:30 PM", name: "Hyde Park", description: "Relájate y pasea por uno de los parques urbanos más grandes y famosos de Londres. **Imprescindible:** Puedes caminar alrededor del Serpentine Lake, visitar el Speaker's Corner (donde cualquiera puede hablar en público) o simplemente disfrutar de los amplios espacios verdes y la tranquilidad. Es un lugar perfecto para desconectar.", links: [{ text: "Hyde Park (Info)", url: "https://www.royalparks.org.uk/parks/st-jamess-park" }] },
+                            { time: "02:30 PM - 03:00 PM", name: "Desplazamiento a Notting Hill.", description: "Un corto trayecto en transporte público te llevará al encantador y colorido barrio de Notting Hill." },
+                            { time: "03:00 PM - 06:00 PM", name: "Notting Hill", description: "Explora las coloridas calles victorianas, las boutiques vintage y el ambiente bohemio de este famoso barrio. **Imprescindible:** Pasea por Portobello Road (aunque el mercado principal es los sábados, el encanto de las tiendas de antigüedades y las fachadas de colores es constante), y piérdete por las calles residenciales para admirar las casas pintadas en tonos pastel. Es un barrio con mucho carácter.", links: [{ text: "Notting Hill (Info)", url: "https://www.visitlondon.com/things-to-do/sightseeing/london-areas/notting-hill" }, { text: "Portobello Road Market (Info)", url: "https://www.portobelloroad.co.uk/" }] },
+                            { time: "06:00 PM en adelante", name: "Cena en Notting Hill o regreso a Eastlight Apartments.", description: "Disfruta de una cena en el vibrante Notting Hill, que ofrece una amplia variedad de restaurantes, o regresa a tu alojamiento." }
+                        ]
+                    },
+                    day7: {
+                        title: "Día 7: Jueves 3 de julio - Camden, King's Cross y British Museum",
+                        mapLink: "https://www.google.com/maps/search/?api=1&query=Camden+Town",
+                        activities: [
+                            { time: "09:30 AM - 10:00 AM", name: "Salida desde Eastlight Apartments", description: "Dirígete a la zona de King's Cross para comenzar tu último día de exploración, combinando magia y cultura." },
+                            { time: "10:00 AM - 11:00 AM", name: "King's Cross Station (Decoración Harry Potter)", description: "Visita la icónica Plataforma 9 ¾ y la tienda temática de Harry Potter en la estación King's Cross. **Imprescindible:** Tómate la famosa foto empujando el carrito a través de la pared y explora la tienda para encontrar souvenirs mágicos. Es un punto de peregrinación para los fans de Harry Potter.", links: [{ text: "King's Cross Station (Info)", url: "https://kingscross.co.uk/" }, { text: "Platform 9 ¾ (Info)", url: "https://www.wbstudiotour.co.uk/explore/platform-9-3-4/" }] },
+                            { time: "11:00 AM - 11:30 AM", name: "Desplazamiento al British Museum.", description: "Un corto paseo o trayecto en autobús te llevará a uno de los museos más importantes y antiguos del mundo." },
+                            { time: "11:30 AM - 01:00 PM", name: "British Museum (1.5 horas)", description: "Explora los tesoros del British Museum, que alberga una vasta colección de arte y artefactos de todo el mundo. **Imprescindible:** Concéntrate en las galerías más famosas: la Piedra Rosetta (clave para descifrar jeroglíficos egipcios), las impresionantes momias egipcias y las esculturas del Partenón (Elgin Marbles).", links: [{ text: "British Museum (Reserva)", url: "https://www.britishmuseum.org/visit" }] },
+                            { time: "01:00 PM - 02:00 PM", name: "Almuerzo cerca del British Museum o en el propio museo.", description: "Disfruta de un almuerzo en los alrededores del museo, que cuenta con varias opciones de cafeterías y restaurantes." },
+                            { time: "02:00 PM - 04:30 PM", name: "Camden Town (Markets, Street Food y Canales)", description: "Sumérgete en la cultura alternativa y vibrante de Camden. **Imprescindible:** Explora sus famosos mercados (Camden Market, Camden Lock Market) para encontrar ropa vintage, artesanías y souvenirs únicos. Prueba la deliciosa y diversa comida callejera de todo el mundo y pasea junto a los canales para ver las coloridas barcazas.", links: [{ text: "Camden Market (Info)", url: "https://www.camdenmarket.com/" }] },
+                            { time: "04:30 PM - 05:30 PM", name: "Regent's Park (Opcional/Breve)", description: "Si el tiempo y la energía lo permiten, disfruta de un paseo tranquilo por este hermoso parque real. **Imprescindible:** Si te da tiempo, visita la impresionante Rosaleda de la Reina María (Queen Mary's Rose Garden) con miles de rosas, o simplemente relájate en sus amplias zonas verdes. Es una opción para un final de tarde más relajado." , links: [{ text: "Regent's Park (Info)", url: "https://www.royalparks.org.uk/parks/regents-park" }] },
+                            { time: "05:30 PM en adelante", name: "Regreso a Eastlight Apartments y tiempo libre.", description: "Regresa a tu alojamiento para descansar o disfrutar de una última cena en Londres, reflexionando sobre todas las experiencias vividas." }
+                        ]
+                    }
+                }
+            },
+            englandRural: {
+                name: "Inglaterra Rural",
+                days: {
+                    day8: {
+                        title: "Día 8: Viernes 4 de julio - Oxford Universitario y sus Secretos",
+                        mapLink: "https://www.google.com/maps/search/?api=1&query=Oxford",
+                        activities: [
+                            { time: "10:30 AM", name: "Salida desde Londres", description: "Inicia tu viaje en coche de alquiler hacia Oxford. Asegúrate de calcular el tiempo de viaje." },
+                            { time: "12:00 PM - 1:00 PM (aprox.)", name: "Llegada a Oxford y Pear Tree Park & Ride", description: "Dirígete directamente al **Pear Tree Park & Ride (OX2 8JD)**. Estaciona tu coche y compra los billetes para la línea 300 de autobús. **Información Clave para la Llegada:** Punto de partida: Londres. Hospedaje: Delta Hotels Swindon by Marriott. Tiempo de Viaje (Londres a Oxford): Calcula entre 1.5 y 2.5 horas en coche, dependiendo del tráfico. Park & Ride Recomendado: Pear Tree Park & Ride (OX2 8JD). Servicio de Autobús: Línea 300 de Park & Ride al centro de Oxford (aprox. 12-15 min).", links: [{ text: "Pear Tree Park & Ride Info", url: "https://www.oxford.gov.uk/directory_record/33940/pear_tree_park_and_ride" }, { text: "Oxford Bus Company (Línea 300)", url: "https://www.oxfordbus.co.uk/park-ride" }] },
+                            { time: "1:00 PM - 1:15 PM", name: "Traslado al Centro de Oxford", description: "Toma el autobús al centro de Oxford. Bájate en paradas céntricas como St Giles' o Magdalen Street." },
+                            { time: "1:15 PM - 2:45 PM", name: "Christ Church (Colegio Universitario y Catedral) y Christ Church Meadow", description: "**Contexto:** Uno de los colegios más prestigiosos de Oxford, famoso por su Gran Comedor (inspiración de Hogwarts) y su catedral. El prado es un espacio verde junto al río. **Qué ver/No perderse:** El **Gran Comedor** es un 'must' para fans de Harry Potter. Pasea por los cuadrángulos. Disfruta un relajante **paseo por Christ Church Meadow**, observando el río Isis y los 'punters'.", links: [{ text: "Christ Church Official Website", url: "https://www.chch.ox.ac.uk/plan-your-visit" }] },
+                            { time: "2:45 PM - 4:45 PM", name: "Joyas Arquitectónicas (Radcliffe Camera, Bodleiana (exterior) y Divinity School)", description: "**Contexto:** El corazón intelectual y arquitectónico de Oxford. La Radcliffe Camera es un símbolo icónico. La Biblioteca Bodleiana es una de las más antiguas del mundo. La Divinity School, parte de la Bodleiana, es una sala gótica espectacular usada en Harry Potter. **Qué ver/No perderse:** Admira la icónica **Radcliffe Camera desde fuera**. Pasea por los patios exteriores de la **Bodleiana**. Entra a la **Divinity School** (entrada gratuita, verificar cierres) para maravillarte con su techo.", links: [{ text: "Divinity School (Bodleian Libraries)", url: "https://www.bodleian.ox.ac.uk/whatson/visit/locations/divinity-school" }] },
+                            { time: "4:45 PM - 6:15 PM", name: "The Covered Market y Tiendas de Recuerdos", description: "**Contexto:** Un histórico mercado cubierto del siglo XVIII, lleno de tiendas independientes, cafeterías y boutiques. **Qué ver/No perderse:** Explora las diversas tiendas de artesanía, moda y comida. Busca **recuerdos universitarios** y artículos de Harry Potter.", links: [{ text: "The Covered Market Official Site", url: "https://oxfordcoveredmarket.co.uk/" }] },
+                            { time: "6:15 PM - 6:45 PM", name: "Regreso al Park & Ride", description: "Toma el autobús de regreso a Pear Tree Park & Ride." },
+                            { time: "6:45 PM - 7:45 PM (aprox.)", name: "Viaje a Delta Hotels Swindon by Marriott", description: "Conduce desde Oxford a tu hotel en Swindon (aprox. 45-60 minutos)." },
+                            { time: "7:45 PM - 8:30 PM (aprox.)", name: "Check-in en el Hotel", description: "Llegada al Delta Hotels Swindon by Marriott para el check-in. El hospedaje permite check-in a partir de las 3:00 PM." }
+                        ]
+                    },
+                    day9: {
+                        title: "Día 9: Sábado 5 de julio - Los Idílicos Cotswolds",
+                        mapLink: "https://www.google.com/maps/search/?api=1&query=Cotswolds",
+                        activities: [
+                            { time: "9:30 AM", name: "Salida del hotel", description: "Inicia tu día desde el Delta Hotels Swindon by Marriott." },
+                            { time: "9:30 AM - 10:15 AM", name: "Viaje a Burford", description: "" },
+                            { time: "10:15 AM - 10:45 AM", name: "Burford (La 'Puerta de los Cotswolds')", description: "**Contexto:** Famoso pueblo medieval de lana. Su 'High Street' desciende suavemente hacia el río Windrush, flanqueada por edificios de piedra antiguos. **Qué ver/No perderse:** La **vista de la High Street** bajando la colina es icónica. Puedes asomarte brevemente a la Iglesia de St. John the Baptist." },
+                            { time: "10:45 AM - 11:15 AM", name: "Viaje a Kingham", description: "" },
+                            { time: "11:15 AM - 11:30 AM", name: "Kingham (El Pueblo Favorito de Inglaterra)", description: "**Contexto:** Un pueblo menos turístico pero con un encanto rural auténtico, con casas de piedra y una gran plaza verde. **Qué ver/No perderse:** Un breve recorrido en auto o a pie por la **plaza del pueblo (village green)** para apreciar la armonía de las casas de piedra." },
+                            { time: "11:30 AM - 12:00 PM", name: "Viaje a Broadway", description: "" },
+                            { time: "12:00 PM - 12:30 PM", name: "Broadway (Elegancia Cotswold)", description: "**Contexto:** Un pueblo grande y elegante con una High Street ancha y arbolada, llena de edificios de piedra caliza que albergan galerías de arte y pubs. **Qué ver/No perderse:** Conduce por la **ancha High Street** para admirar la belleza de sus edificios. Si te fijas, puedes ver la **Broadway Tower** en la distancia." },
+                            { time: "12:30 PM - 1:00 PM", name: "Viaje a Upper Slaughter", description: "" },
+                            { time: "1:00 PM - 1:15 PM", name: "Upper Slaughter (Paz y Serenidad)", description: "**Contexto:** Famoso por su tranquilidad y por haber evitado el desarrollo moderno. El río Eye cruza el pueblo a través de un pintoresco vado. **Qué ver/No perderse:** Un paseo muy corto para ver el **vado (ford)** y sentir la atmósfera de calma." },
+                            { time: "1:15 PM - 1:30 PM", name: "Viaje a Lower Slaughter", description: "" },
+                            { time: "1:30 PM - 2:00 PM", name: "Lower Slaughter (La Postcard Perfecta)", description: "**Contexto:** Posiblemente el pueblo más fotografiado y pintoresco de los Cotswolds. El río Eye fluye suavemente a través del pueblo, con pequeños puentes de piedra y un antiguo molino de agua. **Qué ver/No perderse:** El **paseo idílico junto al río** es la imagen más icónica. El **Old Mill (Antiguo Molino)** es muy fotogénico." },
+                            { time: "2:00 PM - 2:30 PM", name: "Viaje a Bourton-on-the-Water", description: "" },
+                            { time: "2:30 PM - 3:15 PM", name: "Almuerzo Familiar en Bourton-on-the-Water", description: "**Contexto:** Conocida como la 'Venecia de los Cotswolds' por el río Windrush que la atraviesa con puentes bajos. Es uno de los pueblos más populares y animados. **Dónde comer/Enlaces:** The Old Manse Hotel. The Croft Restaurant.", links: [{ text: "The Old Manse Hotel", url: "https://www.google.com/maps/search/?api=1&query=The+Old+Manse+Hotel+Bourton-on-the-Water" }, { text: "The Croft Restaurant", url: "https://www.google.com/maps/search/?api=1&query=The+Croft+Restaurant+Bourton-on-the-Water" }] },
+                            { time: "3:15 PM - 3:45 PM", name: "Viaje a Bibury", description: "" },
+                            { time: "3:45 PM - 4:30 PM", name: "Bibury (El Pueblo Más Bonito de Inglaterra)", description: "**Contexto:** A menudo citado por William Morris como el 'pueblo más bonito de Inglaterra'. Famoso por la icónica Arlington Row. **Qué ver/No perderse:** **Arlington Row**, la hilera de cabañas de tejados inclinados del siglo XIV, es el lugar perfecto para una foto. Un **paseo rápido junto al río Coln**." },
+                            { time: "4:30 PM - 5:30 PM", name: "Parada para Café/Té/Refrescos", description: "**Contexto:** Un pequeño descanso para recargar energías. **Dónde parar/Enlaces:** En **Bradford-on-Avon**: The Coffee Stop. En **Lacock**: Lacock Bakery & Tea Room. En **Castle Combe**: El Old Rectory Tea Room (verificar horarios de cierre).", links: [{ text: "The Coffee Stop", url: "https://www.google.com/maps/search/?api=1&query=The+Coffee+Stop+Bradford-on-Avon" }, { text: "Lacock Bakery & Tea Room", url: "https://www.google.com/maps/search/?api=1&query=Lacock+Bakery+and+Tea+Room" }, { text: "Old Rectory Tea Room", url: "https://www.google.com/maps/search/?api=1&query=Old+Rectory+Tea+Room+Castle+Combe" }] },
+                            { time: "5:30 PM - 6:30 PM", name: "Viaje de regreso a Swindon", description: "Posible parada para cena rápida en ruta en algún pub familiar a lo largo de la A4 y la A36." },
+                            { time: "6:30 PM - 8:30 PM", name: "Cena en Swindon", description: "" }
+                        ]
+                    },
+                    day10: {
+                        title: "Día 10: Domingo 6 de julio - Gigantes Prehistóricos y Joyas de Wiltshire",
+                        mapLink: "https://www.google.com/maps/search/?api=1&query=Stonehenge",
+                        activities: [
+                            { time: "9:30 AM", name: "Salida del hotel", description: "Inicia tu día desde el Delta Hotels Swindon by Marriott." },
+                            { time: "9:30 AM - 10:30 AM", name: "Viaje a Stonehenge", description: "" },
+                            { time: "10:30 AM - 11:30 AM", name: "Stonehenge (Misterio Prehistórico)", description: "**Contexto:** El icónico monumento megalítico prehistórico, Patrimonio de la Humanidad de la UNESCO. Su propósito exacto sigue siendo un misterio. **Qué ver/No perderse:** El **círculo de piedras** es la estrella. Puedes optar por una vista desde la carretera o una parada rápida en el centro de visitantes. Si entras, **pre-reserva tus entradas online**.", links: [{ text: "Stonehenge Official Site (English Heritage)", url: "https://www.english-heritage.org.uk/visit/places/stonehenge/plan-your-visit/tickets/" }] },
+                            { time: "11:30 AM - 12:30 PM", name: "Viaje a Shaftesbury", description: "" },
+                            { time: "12:30 PM - 1:00 PM", name: "Shaftesbury (Vistas Icónicas)", description: "**Contexto:** Histórica ciudad mercado en Dorset, famosa por su pintoresca calle empedrada y vistas panorámicas. **Qué ver/No perderse:** **Gold Hill**, la famosa calle empedrada con casas de tejado de paja, perfecta para fotos y con **vistas panorámicas** espectaculares.", links: [{ text: "Gold Hill, Shaftesbury en Google Maps", url: "https://www.google.com/maps/search/?api=1&query=Gold+Hill+Shaftesbury" }] },
+                            { time: "1:00 PM - 1:45 PM", name: "Viaje a Bradford-on-Avon", description: "" },
+                            { time: "1:45 PM - 2:45 PM", name: "Almuerzo Familiar en Bradford-on-Avon", description: "**Contexto:** Encantadora ciudad fluvial a orillas del río Avon, a menudo descrita como un 'mini-Bath' por su arquitectura de piedra caliza y su puente medieval. **Dónde comer/Enlaces:** The Dandy Lion. The Bunch of Grapes.", links: [{ text: "The Dandy Lion", url: "https://www.google.com/maps/search/?api=1&query=The+Dandy+Lion+Bradford-on-Avon" }, { text: "The Bunch of Grapes", url: "https://www.google.com/maps/search/?api=1&query=The+Bunch+of+Grapes+Bradford-on-Avon" }] },
+                            { time: "2:45 PM - 3:30 PM", name: "Viaje a Lacock", description: "" },
+                            { time: "3:30 PM - 4:15 PM", name: "Lacock (Pueblo de Película y de Cuento)", description: "**Contexto:** Pueblo de propiedad del National Trust, increíblemente bien conservado y que parece detenido en el tiempo. Ha sido escenario de películas (Harry Potter, Orgullo y Prejuicio). Alberga la Abadía de Lacock. **Qué ver/No perderse:** Un **paseo a pie por el pueblo** es esencial. La **Abadía de Lacock** (puedes verla desde fuera o los claustros) es interesante para fans de Harry Potter.", links: [{ text: "Lacock National Trust", url: "https://www.nationaltrust.org.uk/visit/wiltshire/lacock-abbey-fox-talbot-museum-and-village" }] },
+                            { time: "4:15 PM - 4:45 PM", name: "Viaje a Castle Combe", description: "" },
+                            { time: "4:45 PM - 5:30 PM", name: "Castle Combe (El Pueblo Más Bonito de Inglaterra)", description: "**Contexto:** Frecuentemente citado como uno de los pueblos más bonitos de Inglaterra. Un pueblo idílico con un pintoresco puente y casas de piedra color miel. **Qué ver/No perderse:** La **vista icónica desde el puente** sobre el río Bybrook, con la iglesia al fondo, es la postal perfecta. El **Market Cross** en el centro del pueblo.", links: [{ text: "Castle Combe en Google Maps", url: "https://www.google.com/maps/search/?api=1&query=Castle+Combe" }] },
+                            { time: "5:30 PM - 6:30 PM", name: "Parada para Café/Té/Refrescos", description: "**Contexto:** Un último respiro antes de regresar al hotel. **Dónde parar/Enlaces:** En **Bradford-on-Avon**: The Coffee Stop. En **Lacock**: Lacock Bakery & Tea Room. En **Castle Combe**: El Old Rectory Tea Room (verificar horarios de cierre).", links: [{ text: "The Coffee Stop", url: "https://www.google.com/maps/search/?api=1&query=The+Coffee+Stop+Bradford-on-Avon" }, { text: "Lacock Bakery & Tea Room", url: "https://www.google.com/maps/search/?api=1&query=Lacock+Bakery+and+Tea+Room" }, { text: "Old Rectory Tea Room", url: "https://www.google.com/maps/search/?api=1&query=Old+Rectory+Tea+Room+Castle+Combe" }] },
+                            { time: "6:30 PM - 7:30 PM", name: "Viaje de regreso a Swindon", description: "Posible parada para cena rápida en ruta en algún pub familiar a lo largo de la A4 y la A36." },
+                            { time: "7:30 PM - 8:30 PM", name: "Cena en Swindon", description: "" }
+                        ]
+                    }
+                }
+            },
+            wales: {
+                name: "Gales",
+                days: {
+                    day11: {
+                        title: "Día 11: Lunes 7 de julio - Swindon a Betws-y-Coed, pasando por Cardiff",
+                        mapLink: "https://www.google.com/maps/search/?api=1&query=Cardiff+Castle", // Main map link for the day
+                        activities: [
+                            { time: "8:00 AM", name: "Salida desde el Delta Hotels by Marriott Swindon", description: "Inicia tu viaje hacia Gales." },
+                            { time: "11:00 AM - 1:00 PM", name: "Exploración de Cardiff: Castillo de Cardiff", description: "Explora el majestuoso **Castillo de Cardiff**. Sumérgete en sus 2000 años de historia, desde sus orígenes romanos hasta su transformación victoriana. **Imprescindible:** Recorre las murallas, visita los apartamentos victorianos y la torre del homenaje.", links: [{ text: "Castillo de Cardiff", url: "https://www.cardiffcastle.com/" }] },
+                            { time: "1:00 PM - 2:30 PM", name: "Almuerzo en Cardiff", description: "Disfruta de la gastronomía local. **Sugerencias:** The Grazing Shed (hamburguesas artesanales), Stefano's Ristorante Italiano (auténtica comida italiana), Gwdihw Cafe Bar (ambiente relajado con música).", links: [{ text: "The Grazing Shed", url: "https://thegrazingshed.com/" }, { text: "Stefano's Ristorante Italiano", url: "https://stefanoscardiff.co.uk/" }, { text: "Gwdihw Cafe Bar", url: "https://www.gwdihw.co.uk/" }] },
+                            { time: "2:30 PM - 5:00 PM", name: "Exploración de Cardiff: Bahía de Cardiff", description: "Visita la moderna **Bahía de Cardiff**. Pasea por el paseo marítimo, admira el **Wales Millennium Centre** y disfruta del ambiente renovado de la zona.", links: [{ text: "Bahía de Cardiff", url: "https://www.visitcardiff.com/see-do/cardiff-bay/" }, { text: "Wales Millennium Centre", url: "https://www.wmc.org.uk/" }] },
+                            { time: "5:00 PM - 8:00 PM", name: "Viaje a Betws-y-Coed", description: "Disfruta del pintoresco trayecto por carretera, pasando por Dolgellau, con vistas cambiantes del paisaje galés. (Ruta de Cardiff a Betws-y-Coed: <a href='https://www.google.com/maps/dir/Cardiff/Betws-y-Coed' target='_blank' class='text-blue-600 hover:underline'>Ver en Google Maps</a>)" },
+                            { time: "8:00 PM", name: "Llegada y Check-in en The Swallow Falls Inn", description: "Check-in y acomodación en <a href='https://www.inncollectiongroup.com/swallow-falls-inn/' target='_blank' class='text-blue-600 hover:underline'>The Swallow Falls Inn</a> en Betws-y-Coed." },
+                            { time: "8:30 PM en adelante", name: "Cena en Betws-y-Coed (Opciones Familiares)", description: "Disfruta de la cena en Betws-y-Coed. **Sugerencias familiares:** Y Stablau (Pub con comida) <span class='family-friendly-tag'>Familiar</span>, Pont-y-Pair Inn (Pub con comida) <span class='family-friendly-tag'>Familiar</span>, The Grill Room / Royal Oak Hotel (Restaurante) <span class='family-friendly-tag'>Familiar</span>, Glan Aber Hotel Restaurant (Restaurante de hotel) <span class='family-friendly-tag'>Familiar</span>. Olif Betws-y-Coed (Tapas Bar & Restaurant) es otra opción. Se recomienda verificar horarios y reservar.", links: [{ text: "Y Stablau", url: "https://www.ystablau.com/" }, { text: "Pont-y-Pair Inn", url: "https://www.pont-y-pair.com/" }, { text: "The Grill Room / Royal Oak Hotel", url: "https://royaloakhotel.net/food-drink/" }, { text: "Glan Aber Hotel Restaurant", url: "https://www.glanaberhotel.co.uk/dining-at-the-glan-aber/" }, { text: "Olif Betws-y-Coed", url: "https://www.olifbetws.wales/page/eat" }] }
+                        ]
+                    },
+                    day12: {
+                        title: "Día 12: Martes 8 de julio - Snowdonia y el Snowdon Mountain Railway",
+                        mapLink: "https://www.google.com/maps/search/?api=1&query=Snowdonia+National+Park",
+                        activities: [
+                            { time: "9:30 AM", name: "Salida desde el hotel", description: "Inicia tu día explorando la majestuosidad del Parque Nacional de Snowdonia." },
+                            { time: "9:30 AM - 10:30 AM", name: "Visita al Centro de Información Turística de Betws-y-Coed", description: "Obtén mapas y consejos locales en el <a href='https://www.visitwales.com/attraction/visitor-centre/betws-y-coed-tourist-information-centre-919774' target='_blank' class='text-blue-600 hover:underline'>Centro de Información Turística de Betws-y-Coed</a>." },
+                            { time: "11:00 AM - 2:30 PM", name: "Llanberis y Snowdon Mountain Railway", description: "**11:00 AM - 1:30 PM:** Viaje en el <a href='https://snowdonrailway.co.uk/' target='_blank' class='text-blue-600 hover:underline'>Snowdon Mountain Railway</a>. Disfruta de un ascenso panorámico a la cima de Snowdon (Yr Wyddfa), la montaña más alta de Gales. ¡Recuerda reservar con antelación! **1:30 PM - 2:30 PM:** Almuerzo en Llanberis, un pueblo vibrante al pie de la montaña." },
+                            { time: "2:30 PM - 3:00 PM", name: "Trayecto a Caernarfon", description: "Disfruta del corto viaje desde Llanberis hasta la histórica ciudad de Caernarfon." },
+                            { time: "3:00 PM - 5:30 PM", name: "Visita al Castillo de Caernarfon", description: "Visita el imponente <a href='https://cadw.gov.wales/visit/places-to-visit/caernarfon-castle' target='_blank' class='text-blue-600 hover:underline'>Castillo de Caernarfon</a>, Patrimonio de la Humanidad por la UNESCO. Este castillo medieval es uno de los más grandes y mejor conservados de Gales. Tendrás 2.5 horas para explorarlo. **Imprescindible:** Recorre sus torres, murallas y el museo de los Royal Welch Fusiliers." },
+                            { time: "5:30 PM - 6:15 PM", name: "Trayecto a Beddgelert", description: "Viaje panorámico desde Caernarfon al encantador pueblo de Beddgelert." },
+                            { time: "6:15 PM - 7:30 PM", name: "Exploración de Beddgelert", description: "Explora el pintoresco pueblo de <a href='https://www.visitsnowdonia.info/beddgelert' target='_blank' class='text-blue-600 hover:underline'>Beddgelert</a>, famoso por la conmovedora leyenda del perro Gelert. Pasea por sus calles y el monumento al perro. **Imprescindible:** Visita el monumento a Gelert y disfruta del ambiente tranquilo del pueblo junto al río Glaslyn." },
+                            { time: "7:30 PM - 8:15 PM", name: "Regreso al hotel en Betws-y-Coed.", description: "" },
+                            { time: "9:00 PM", name: "Cena en Betws-y-Coed (Opciones Familiares)", description: "Disfruta de la cena en Betws-y-Coed. **Sugerencias familiares:** Y Stablau (Pub con comida) <span class='family-friendly-tag'>Familiar</span>, Pont-y-Pair Inn (Pub con comida) <span class='family-friendly-tag'>Familiar</span>, The Grill Room / Royal Oak Hotel (Restaurante) <span class='family-friendly-tag'>Familiar</span>, Glan Aber Hotel Restaurant (Restaurante de hotel) <span class='family-friendly-tag'>Familiar</span>. Recuerda que el Ty Gwyn Coaching Inn y el Llugwy River Restaurant están cerrados los Lunes y Martes, por lo que no serían opciones para esta noche. Se recomienda verificar horarios y reservar.", links: [{ text: "Y Stablau", url: "https://www.ystablau.com/" }, { text: "Pont-y-Pair Inn", url: "https://www.pont-y-pair.com/" }, { text: "The Grill Room / Royal Oak Hotel", url: "https://royaloakhotel.net/food-drink/" }, { text: "Glan Aber Hotel Restaurant", url: "https://www.glanaberhotel.co.uk/dining-at-the-glan-aber/" }, { text: "Olif Betws-y-Coed", url: "https://www.olifbetws.wales/page/eat" }] }
+                        ]
+                    },
+                    day13: {
+                        title: "Día 13: Miércoles 9 de julio - Conwy, el pueblo del nombre más largo y Rutas Panorámicas",
+                        mapLink: "https://www.google.com/maps/search/?api=1&query=Conwy+Castle",
+                        activities: [
+                            { time: "9:30 AM", name: "Salida desde el hotel", description: "Comienza tu día explorando la costa norte de Gales." },
+                            { time: "10:30 AM - 1:00 PM", name: "Exploración de Conwy: Castillo de Conwy y Murallas", description: "Visita el <a href='https://cadw.gov.wales/visit/places-to-visit/conwy-castle' target='_blank' class='text-blue-600 hover:underline'>Castillo de Conwy</a> y sus murallas medievales, otro sitio Patrimonio de la Humanidad. **Imprescindible:** Pasea por las murallas para disfrutar de vistas espectaculares del estuario y la ciudad, y explora las torres del castillo." },
+                            { time: "1:00 PM - 2:30 PM", name: "Almuerzo en Conwy", description: "Disfruta de un almuerzo en Conwy. Hay varios pubs y cafeterías con encanto dentro de las murallas." },
+                            { time: "3:00 PM - 4:00 PM", name: "Visita a Llanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogogogoch", description: "Haz una parada en el famoso pueblo con el nombre más largo del Reino Unido. **Imprescindible:** Tómate una foto junto al letrero de la estación y trata de pronunciar el nombre completo. ¡Un lugar divertido y único!", links: [{ text: "Llanfairpwllgwyngyll (Wikipedia)", url: "https://es.wikipedia.org/wiki/Llanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogogogoch" }] },
+                            { time: "4:30 PM - 7:30 PM", name: "Rutas Panorámicas AA70 y A5", description: "Disfruta de un relajante recorrido en coche por estas rutas escénicas, ofreciendo vistas impresionantes de las montañas y valles de Snowdonia. **Imprescindible:** Detente en miradores para apreciar los paisajes dramáticos y la belleza natural de la región." },
+                            { time: "8:30 PM - 9:00 PM", name: "Regreso al hotel en Betws-y-Coed.", description: "" },
+                            { time: "9:00 PM", name: "Cena en Betws-y-Coed (Opciones Familiares)", description: "Disfruta de la cena en Betws-y-Coed. **Sugerencias familiares:** Y Stablau (Pub con comida) <span class='family-friendly-tag'>Familiar</span>, Pont-y-Pair Inn (Pub con comida) <span class='family-friendly-tag'>Familiar</span>, The Grill Room / Royal Oak Hotel (Restaurante) <span class='family-friendly-tag'>Familiar</span>, Glan Aber Hotel Restaurant (Restaurante de hotel) <span class='family-friendly-tag'>Familiar</span>. Se recomienda verificar horarios y reservar.", links: [{ text: "Y Stablau", url: "https://www.ystablau.com/" }, { text: "Pont-y-Pair Inn", url: "https://www.pont-y-pair.com/" }, { text: "The Grill Room / Royal Oak Hotel", url: "https://royaloakhotel.net/food-drink/" }, { text: "Glan Aber Hotel Restaurant", url: "https://www.glanaberhotel.co.uk/dining-at-the-glan-aber/" }, { text: "Olif Betws-y-Coed", url: "https://www.olifbetws.wales/page/eat" }] }
+                        ]
+                    }
+                }
+            },
+            lakeDistrict: {
+                name: "Lake District",
+                days: {
+                    day14: {
+                        title: "Día 14: Jueves 10 de julio - El Encanto del Lake District",
+                        mapLink: "https://www.google.com/maps/search/?api=1&query=Windermere+Lake+District",
+                        activities: [
+                            { time: "10:30 AM", name: "Check out hospedaje: The Swallow Falls Inn", description: "Salida desde tu alojamiento en Betws-y-Coed, Gales, para iniciar el viaje hacia el Lake District." },
+                            { time: "09:00 AM - 1:00 PM", name: "Mañana: Viaje a Windermere en el corazón del Lake District NP", description: "Disfruta del pintoresco viaje hacia el Parque Nacional del Lake District. Prepárense para paisajes espectaculares de montañas y lagos." },
+                            { time: "1:00 PM - 1:30 PM", name: "Llegada a Windermere y comienzo de la ruta en coche", description: "Llegada a la zona de Windermere, el punto de partida para tu recorrido en coche por los pintorescos pueblos del Lake District. Prepárense para un paisaje impresionante." },
+                            { time: "1:30 PM - 2:30 PM", name: "Bowness-on-Windermere (Paseo y Opción de Barco)", description: "Explora **Bowness-on-Windermere**, el centro turístico más animado del lago. **Imprescindible:** Pasea por el muelle, disfruta de las vistas y, si lo deseas, considera un **paseo opcional en barco por el Lago Windermere** para apreciar las vistas panorámicas desde el agua.", links: [{ text: "Windermere Lake Cruises", url: "https://www.windermere-lakecruises.co.uk/" }] },
+                            { time: "2:30 PM - 3:30 PM", name: "Ambleside y Bridge House", description: "Dirígete en coche a **Ambleside**, un encantador pueblo en el extremo norte del lago. **Imprescindible:** Visita la icónica **Bridge House**, una pequeña casa del siglo XVII construida sobre un puente, que es una de las imágenes más fotografíadas del Lake District. Pasea por sus calles con tiendas de senderismo y cafés." },
+                            { time: "3:30 PM - 4:30 PM", name: "Hawkshead y Beatrix Potter", description: "Continúa en coche hacia **Hawkshead**, un pintoresco pueblo con calles estrechas y edificios tradicionales de piedra. **Imprescindible:** Explora el pueblo a pie y visita la Galería Beatrix Potter, donde se exhiben ilustraciones originales de sus libros infantiles.", links: [{ text: "Beatrix Potter Gallery", url: "https://www.nationaltrust.org.uk/visit/lake-district/hawkshead/beatrix-potter-gallery" }] },
+                            { time: "4:30 PM - 6:00 PM", name: "Grasmere y Wordsworth", description: "Finaliza la tarde en **Grasmere**, famoso por su conexión con el poeta William Wordsworth. **Imprescindible:** Visita **Dove Cottage**, la casa donde vivió Wordsworth, y no olvides probar el famoso **Grasmere Gingerbread** en la tienda original. Disfruta de un paseo tranquilo por el pueblo.", links: [{ text: "Wordsworth Grasmere (Dove Cottage)", url: "https://wordsworth.org.uk/" }, { text: "Grasmere Gingerbread", url: "https://www.grasmeregingerbread.co.uk/" }] },
+                            { time: "6:00 PM - 7:00 PM (aprox.)", name: "Check in hospedaje: Lake District Castle Inn", description: "Llegada y check-in en el Lake District Castle Inn. Acomódate antes de la cena. El hospedaje permite check-in a partir de las 3:00 PM." },
+                            { time: "7:00 PM en adelante", name: "Cenar en el pub/bar 'Tavern' del hotel", description: "Disfruta de una cena relajada en el histórico pub 'Tavern' del hotel (con más de 300 años de antigüedad)." }
+                        ]
+                    }
+                }
+            },
+            scotland: {
+                name: "Escocia",
+                days: {
+                    day15: {
+                        title: "Día 15: Viernes 11 de julio - De Lake District a Glasgow (Llegada y Tarde Libre)",
+                        mapLink: "https://www.google.com/maps/search/?api=1&query=Glasgow",
+                        activities: [
+                            { time: "Hasta 1:00 PM", name: "Desayuno y Check-out hospedaje: Lake District Castle Inn", description: "Disfruten de un desayuno tranquilo y realicen el check-out de su alojamiento en el Lake District. Tendrán tiempo para un último paseo corto por la zona si lo desean antes de salir." },
+                            { time: "1:00 PM - 4:00 PM (aprox.)", name: "Viaje a Glasgow", description: "Inicien el viaje panorámico en coche desde el Lake District hasta la vibrante ciudad de Glasgow. El trayecto dura aproximadamente 3 horas." },
+                            { time: "4:00 PM - 4:30 PM (aprox.)", name: "Llegada a Glasgow y Check-in en el hotel", description: "Llegada a Glasgow y diríjanse al Hampton by Hilton Hamilton Park. Realicen el check-in y dejen el equipaje. El hospedaje permite check-in a partir de las 3:00 PM." },
+                            { time: "Tarde/Noche", name: "Tiempo libre y cena en Glasgow", description: "Una vez acomodados, tendrán la tarde y noche libres para descansar, dar un paseo relajado por los alrededores del hotel o dirigirse al centro para una primera toma de contacto con la ciudad y disfrutar de una cena." }
+                        ]
+                    },
+                    day16: {
+                        title: "Día 16: Sábado 12 de julio - Explorando el Corazón Histórico y Urbano de Glasgow",
+                        mapLink: "https://www.google.com/maps/search/?api=1&query=Glasgow+Cathedral",
+                        activities: [
+                            { time: "Mañana", name: "Catedral de Glasgow y Necrópolis", description: "Comiencen el día explorando la histórica **Catedral de Glasgow**, un impresionante ejemplo de arquitectura gótica. Justo al lado, visiten la **Necrópolis**, un fascinante cementerio victoriano con monumentos impresionantes y vistas panorámicas de la ciudad. Es un lugar lleno de historia y un excelente punto de partida para el día.", links: [{ text: "Catedral de Glasgow", url: "https://www.glasgowcathedral.org/" }, { text: "Necrópolis de Glasgow", url: "https://www.glasgownecropolis.org/" }] },
+                            { time: "Mediodía", name: "Almuerzo en el centro de Glasgow", description: "Disfruten de un almuerzo en uno de los muchos restaurantes en el centro de la ciudad, con opciones variadas para toda la familia." },
+                            { time: "Tarde", name: "George Square, Merchant City y la Estatua del Duque de Wellington", description: "Dediquen la tarde a explorar el corazón cívico de Glasgow, **George Square**, rodeado de impresionantes edificios victorianos y estatuas. Paseen por el elegante distrito de **Merchant City**, conocido por su arquitectura y ambiente. No olviden hacer una parada rápida para ver la famosa y divertida **Estatua del Duque de Wellington con su cono de tráfico**, un toque de humor local que a Lorenzo le encantará.", links: [{ text: "George Square", url: "https://www.glasgow.gov.uk/index.aspx?articleid=17013" }, { text: "Estatua del Duque de Wellington", url: "https://www.atlasobscura.com/places/duke-of-wellington-statue" }] },
+                            { time: "Final de Tarde", name: "Buchanan Street y Sauchiehall Street (Paseo y Ambiente)", description: "Para terminar el día, den un paseo por las principales calles comerciales de Glasgow, **Buchanan Street** y **Sauchiehall Street**. Disfruten del ambiente urbano, vean las tiendas y los artistas callejeros, o simplemente absorban la energía de la ciudad." },
+                            { time: "Noche", name: "Cena en Glasgow (centro)", description: "Disfruten de una cena en el vibrante centro de Glasgow, aprovechando la diversidad culinaria de la ciudad." }
+                        ]
+                    },
+                    day17: {
+                        title: "Día 17: Domingo 13 de julio - Glasgow Cultural, Museos y Viaje a Edimburgo",
+                        mapLink: "https://www.google.com/maps/search/?api=1&query=Edinburgh+Castle",
+                        activities: [
+                            { time: "Mañana", name: "Exploración Cultural en Glasgow: Kelvingrove Art Gallery and Museum y Universidad de Glasgow", description: "Comiencen la mañana en el **Kelvingrove Art Gallery and Museum**. Este museo gratuito es muy familiar, con colecciones diversas que van desde arte hasta historia natural, incluyendo dinosaurios y animales, lo que lo hace muy atractivo para Lorenzo. Después, den un paseo por el impresionante campus de la **Universidad de Glasgow**, cuya arquitectura gótica a menudo se compara con Hogwarts, ideal para los fans de Harry Potter.", links: [{ text: "Kelvingrove Art Gallery and Museum", url: "https://www.glasgowlife.org.uk/museums/venues/kelvingrove-art-gallery-and-museum" }, { text: "Universidad de Glasgow", url: "https://www.gla.ac.uk/" }] },
+                            { time: "Mediodía", name: "Riverside Museum (Museo del Transporte) y The Tall Ship Glenlee", description: "Después del almuerzo, diríjanse al **Riverside Museum**, un galardonado museo de transporte y tecnología con exhibiciones interactivas que fascinarán a Lorenzo. Justo al lado, podrán explorar **The Tall Ship Glenlee**, un barco de vela histórico. Ambos son gratuitos y ofrecen una experiencia dinámica antes de partir.", links: [{ text: "Riverside Museum", url: "https://www.glasgowlife.org.uk/museums/venues/riverside-museum" }, { text: "The Tall Ship Glenlee", url: "https://thetallship.com/" }] },
+                            { time: "1:00 PM - 5:00 PM", name: "Viaje a Edimburgo", description: "Conduzcan desde Glasgow a Edimburgo. El trayecto es de aproximadamente 1 hora, pero planifiquen tiempo adicional para el tráfico y la devolución del coche." },
+                            { time: "5:00 PM - 5:30 PM (aprox.)", name: "Check in hospedaje: Drummond Condo by Booking.com", description: "Llegada a Edimburgo y check-in en tu alojamiento. El hospedaje permite check-in a partir de las 3:00 PM." },
+                            { time: "7:00 PM", name: "Devolución del coche de alquiler: Edinburgh City Centre/Waverley - Renault Captur by Sixt", description: "Diríjanse al centro de Edimburgo para devolver el coche de alquiler. La estación de Waverley es un punto céntrico y bien conectado." },
+                            { time: "Noche", name: "Cena en Edimburgo", description: "Disfruten de su primera cena en la capital escocesa." }
+                        ]
+                    }
+                }
+            },
+            dublin: {
+                name: "Dublín",
+                days: {
+                    day18: {
+                        title: "Día 18: Jueves 17 de julio - Viaje a Dublín y Primer Contacto",
+                        mapLink: "https://www.google.com/maps/search/?api=1&query=Dublin+City+Centre",
+                        activities: [
+                            { time: "08:00 AM - 09:00 AM", name: "Viaje: De Drummond Condo al aeropuerto de Edimburgo", description: "Dirígete al aeropuerto de Edimburgo para tu vuelo a Dublín." },
+                            { time: "11:40 AM - 12:45 PM", name: "Vuelo Edimburgo - Dublín (Ryanair)", description: "Vuelo de Edimburgo a Dublín. Asegúrate de llegar con suficiente antelación al aeropuerto." },
+                            { time: "2:00 PM - 2:40 PM", name: "Viaje: Dublin Express al Staycity Aparthotels", description: "Toma el autobús Dublin Express desde el aeropuerto hasta tu alojamiento en el centro de Dublín." },
+                            { time: "3:00 PM", name: "Check in hospedaje: Staycity Aparthotels, Dublin Christchurch", description: "Llegada y check-in en tu aparthotel en Dublín. El hospedaje permite check-in a partir de las 3:00 PM." },
+                            { time: "Tarde/Noche", name: "Primer paseo por Dublín y Cena", description: "Una vez acomodado, sal a dar un primer paseo por los alrededores de tu alojamiento y disfruta de una cena en un restaurante local." }
+                        ]
+                    },
+                    day19: {
+                        title: "Día 19: Viernes 18 de julio - Descubriendo el Corazón de Dublín",
+                        mapLink: "https://www.google.com/maps/search/?api=1&query=Temple+Bar+Dublin",
+                        activities: [
+                            { time: "Mañana", name: "Explorando el Old Town: Trinity College y Grafton Street", description: "Comienza el día visitando el histórico **Trinity College**, hogar del famoso **Libro de Kells** (se recomienda reservar con antelación). Luego, pasea por **Grafton Street**, una de las calles comerciales más famosas de Dublín, conocida por sus artistas callejeros.", links: [{ text: "Trinity College Dublin", url: "https://www.tcd.ie/" }, { text: "Libro de Kells", url: "https://www.tcd.ie/library/old-library/book-of-kells/" }] },
+                            { time: "Tarde", name: "Explorando el Old Town: Temple Bar - Dublin Castle - Chester Beatty Library", description: "Sumérgete en el ambiente bohemio de **Temple Bar**, aunque es turístico, es un lugar icónico. Visita el **Castillo de Dublín**, con su rica historia, y explora la impresionante **Chester Beatty Library**, un museo gratuito con colecciones de manuscritos, grabados y arte de todo el mundo.", links: [{ text: "Temple Bar", url: "https://www.thetemplebarpub.com/" }, { text: "Dublin Castle", url: "https://www.dublincastle.ie/" }, { text: "Chester Beatty Library", url: "https://chesterbeatty.ie/" }] },
+                            { time: "Noche", name: "Cena y Música Tradicional Irlandesa", description: "Disfruta de una cena en un pub tradicional irlandés y, si es posible, asiste a una sesión de música en vivo para una auténtica experiencia dublinesa." }
+                        ]
+                    },
+                    day20: {
+                        title: "Día 20: Sábado 19 de julio - Cultura y Tradición en Dublín",
+                        mapLink: "https://www.google.com/maps/search/?api=1&query=Guinness+Storehouse",
+                        activities: [
+                            { time: "Mañana", name: "Guinness Storehouse o Kilmainham Gaol", description: "Elige entre dos experiencias icónicas: la **Guinness Storehouse** para aprender sobre la famosa cerveza irlandesa (con degustación y vistas panorámicas desde el Gravity Bar), o la histórica prisión de **Kilmainham Gaol**, un lugar clave en la historia de la independencia de Irlanda. Ambas requieren reserva previa.", links: [{ text: "Guinness Storehouse", url: "https://www.guinness-storehouse.com/" }, { text: "Kilmainham Gaol", url: "https://kilmainhamgaolmuseum.ie/" }] },
+                            { time: "Tarde", name: "Catedral de San Patricio y Christ Church Cathedral", description: "Visita dos de las catedrales más importantes de Dublín: la imponente **Catedral de San Patricio** y la antigua **Christ Church Cathedral**. Ambas ofrecen una rica historia y arquitectura.", links: [{ text: "Catedral de San Patricio", url: "https://www.stpatrickscathedral.ie/" }, { text: "Christ Church Cathedral", url: "https://christchurchcathedral.ie/" }] },
+                            { time: "Noche", name: "Tiempo libre y última cena en Dublín", description: "Disfruta de tus últimas horas en Dublín, quizás para comprar souvenirs, pasear por un parque o disfrutar de una última cena irlandesa." }
+                        ]
+                    },
+                    day21: {
+                        title: "Día 21: Domingo 20 de julio - Despedida de Dublín y Regreso a Casa",
+                        mapLink: "https://www.google.com/maps/search/?api=1&query=Dublin+Airport",
+                        activities: [
+                            { time: "05:30 AM - 06:30 AM", name: "Check out hospedaje: Staycity Aparthotels y Viaje al Aeropuerto de Dublín", description: "Realiza el check-out temprano de tu alojamiento y toma el autobús Dublin Express de regreso al aeropuerto de Dublín." },
+                            { time: "09:10 AM - 12:00 PM", name: "Vuelo Dublín (DUB) - París (CDG) (Air France)", description: "Vuelo de Dublín a París. Asegúrate de tener suficiente tiempo para tu conexión." },
+                            { time: "12:00 PM - 1:45 PM", name: "Transbordo en París", description: "Tiempo para el transbordo en el Aeropuerto Charles de Gaulle de París." },
+                            { time: "1:55 PM - 5:45 PM", name: "Vuelo París (CDG) - Ciudad de Panamá (PTY) (Air France)", description: "Vuelo de regreso a casa desde París a Ciudad de Panamá." }
+                        ]
+                    }
+                }
+            }
+        };
+
+        const itineraryContent = document.getElementById('itinerary-content');
+        const regionButtons = document.querySelectorAll('.region-button');
+        const dayButtonsContainer = document.getElementById('day-buttons-container');
+
+        let currentRegion = 'london'; // Default active region
+
+        function renderDay(dayKey, regionKey = currentRegion) {
+            const dayData = itineraryData[regionKey].days[dayKey];
+            if (!dayData) {
+                itineraryContent.innerHTML = '<p class="text-center text-red-500">No se encontró información para este día.</p>';
+                return;
+            }
+
+            let html = `
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <h2 class="section-title mb-4">${dayData.title}</h2>
+                    ${dayData.mapLink ? `<a href="${dayData.mapLink}" target="_blank" class="map-link">Ver Ruta en Google Maps</a>` : ''}
+                    <div class="mt-6 space-y-4">
+            `;
+
+            dayData.activities.forEach(activity => {
+                html += `
+                    <div class="itinerary-item">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">${activity.time}: ${activity.name}</h3>
+                        <p class="text-gray-700 mb-2">${activity.description}</p>
+                `;
+                if (activity.links && activity.links.length > 0) {
+                    html += `<div class="flex flex-wrap gap-2 mt-2">`;
+                    activity.links.forEach(link => {
+                        html += `<a href="${link.url}" target="_blank" class="text-blue-600 hover:underline text-sm">${link.text}</a>`;
+                    });
+                    html += `</div>`;
+                }
+                html += `</div>`; // Close itinerary-item
+            });
+
+            html += `
+                    </div>
+                </div>
+            `;
+            itineraryContent.innerHTML = html;
+
+            // Update active day button state
+            const allDayButtons = dayButtonsContainer.querySelectorAll('.day-button');
+            allDayButtons.forEach(button => button.classList.remove('active'));
+            const activeDayButton = dayButtonsContainer.querySelector(`.day-button[data-day="${dayKey}"]`);
+            if (activeDayButton) {
+                activeDayButton.classList.add('active');
+            }
+        }
+
+        function renderRegionDays(regionKey) {
+            currentRegion = regionKey;
+
+            // Update active region button state
+            regionButtons.forEach(button => button.classList.remove('active'));
+            document.querySelector(`.region-button[data-region="${regionKey}"]`).classList.add('active');
+
+            // Clear previous day buttons
+            dayButtonsContainer.innerHTML = '';
+
+            const regionDays = itineraryData[regionKey].days;
+            const dayKeys = Object.keys(regionDays);
+
+            if (dayKeys.length === 0) {
+                dayButtonsContainer.innerHTML = '<p class="text-center text-gray-600">No hay días planificados para esta región aún.</p>';
+                itineraryContent.innerHTML = '<p class="text-center text-gray-600">Selecciona otra región o espera a que se añadan más días.</p>';
+                return;
+            }
+
+            // Create and append new day buttons
+            dayKeys.forEach(dayKey => {
+                const dayButton = document.createElement('button');
+                dayButton.classList.add('day-button');
+                dayButton.dataset.day = dayKey;
+                // Use the full title for the day button
+                dayButton.textContent = regionDays[dayKey].title;
+                dayButton.addEventListener('click', () => {
+                    renderDay(dayKey, regionKey);
+                });
+                dayButtonsContainer.appendChild(dayButton);
+            });
+
+            // Render the first day of the selected region by default
+            renderDay(dayKeys[0], regionKey);
+        }
+
+        // Event listeners for region buttons
+        regionButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                renderRegionDays(button.dataset.region);
+            });
+        });
+
+        // Render the default region (London) on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            renderRegionDays('london');
+        });
+    </script>
+</body>
+</html>
