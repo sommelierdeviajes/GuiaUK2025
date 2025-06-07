@@ -65,6 +65,8 @@
             background-color: #e5e7eb; /* Gray 200 */
             color: #374151; /* Dark gray text */
             box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            white-space: nowrap; /* Prevent wrapping within a single button */
+            flex-shrink: 0; /* Prevent buttons from shrinking */
         }
         .day-button.active {
             background-color: #3b82f6; /* Tailwind blue-500 */
@@ -137,13 +139,25 @@
             display: inline-block;
         }
 
+        /* Adjustments for smaller screens */
         @media (max-width: 768px) {
-            .nav-main, .nav-days { /* Apply flex-direction column to both navs on small screens */
-                flex-direction: column;
+            .nav-main, .nav-days {
+                flex-direction: column; /* Stack region buttons vertically */
             }
             .region-button, .day-button {
-                width: 100%;
-                margin-bottom: 0.5rem;
+                width: 100%; /* Make buttons full width */
+                margin-bottom: 0.5rem; /* Add some space between stacked buttons */
+            }
+            /* Allow horizontal scrolling for day buttons if they exceed width */
+            #day-buttons-container {
+                overflow-x: auto;
+                flex-direction: row; /* Keep day buttons in a row for scrolling */
+                justify-content: flex-start; /* Align to start for easier scrolling */
+                padding-bottom: 0.5rem; /* Space for scrollbar */
+            }
+            .day-button {
+                font-size: 0.875rem; /* Smaller font size for day buttons */
+                padding: 0.5rem 1rem; /* Adjust padding */
             }
         }
     </style>
@@ -197,6 +211,17 @@
                         mapLink: null, // Travel day, no specific map needed
                         activities: [
                             { time: "18:50", name: "Vuelo KLM Panamá (PTY) - Ámsterdam (AMS)", description: "Inicio de su aventura con el vuelo de KLM desde Ciudad de Panamá a Ámsterdam. El vuelo cruza el océano de noche. R:KLSENN / R:KN8UEK" }
+                        ],
+                        travelInfo: [
+                            { title: "Antes de ir:", description: "" },
+                            { title: "Enchufes electricidad:", description: "Verificar adaptadores. (Tipo G, 230V)" },
+                            { title: "Seguridad:", description: "Liguillas para amarrar teléfonos (para evitar robos). Estar siempre atentos a sus pertenencias." },
+                            { title: "Propinas:", description: "Opcional en comercios. Generalmente 10-12.5% en restaurantes y bares si el servicio fue bueno, se puede añadir con la misma tarjeta." },
+                            { title: "E-sim:", description: '“simLOCAL” para cualquier lugar del mundo. Se instala fácil. 15% de descuento con código "londresmyway".' },
+                            { title: "Agua:", description: "Llevar botellas reusables para recargar agua. Hay fuentes públicas y se puede pedir agua en restaurantes." },
+                            { title: "Pagos:", description: "Uso de tarjeta de crédito en casi todos lados. Se recomienda tener algo de efectivo para pequeños gastos o mercados." },
+                            { title: "Visa:", description: "Verificar si se necesita ETA (Autorización Electrónica de Viaje) para el Reino Unido para su nacionalidad." },
+                            { title: "Transporte:", description: "Comprar Oyster para Lola, Loro gratis (menor de 11) y nosotros con contactless (cada persona debe tener su propia tarjeta de crédito/débito contactless para pagar)." }
                         ]
                     },
                     day2: {
@@ -214,20 +239,19 @@
                     },
                     day3: {
                         title: "Día 3: Domingo 29 de junio - Westminster y South Bank",
-                        mapLink: "https://www.google.com/maps/dir/?api=1&origin=Buckingham+Palace&destination=Leake+Street+Arches&waypoints=Horse+Guards+Parade|St.+James's+Park|Big+Ben|Westminster+Abbey|London+Eye&travelmode=walking",
+                        mapLink: "https://www.google.com/maps/dir/?api=1&origin=Buckingham+Palace&destination=Leake+Street+Arches&waypoints=Horse+Guards+Parade|St.+James's+Park|Big+Ben|BSE+Memorial+Plaque|Albert+Embankment|Westminster+Abbey&travelmode=walking",
                         activities: [
                             { time: "09:30 - 10:00 AM", name: "Salida desde Eastlight Apartments", description: "Comienza tu día con un corto trayecto en transporte público hacia el corazón de Londres. Prepárate para un día lleno de historia y vistas icónicas." },
-                            { time: "10:00 - 11:30 AM", name: "Buckingham Palace - Cambio de Guardia", description: "Sé testigo de la famosa ceremonia del Cambio de Guardia en la residencia oficial de la monarquía británica. **Imprescindible:** Asegúrate de llegar temprano (al menos 45-60 minutos antes) para conseguir una buena posición frente a las rejas del palacio y ver la banda y los guardias. Observa la fachada del palacio y las icónicas puertas doradas.", links: [{ text: "Palacio de Buckingham (Info)", url: "https://www.rct.uk/visit/buckingham-palace" }, { text: "Cambio de Guardia (Horarios)", url: "https://www.householddivision.org.uk/trooping-the-colour" }] },
-                            { time: "11:30 AM - 12:00 PM", name: "Parliament Street (The Horse Guards)", description: "Admira a los impresionantes guardias a caballo en su puesto ceremonial en Horse Guards Parade. **Imprescindible:** Observa de cerca los detalles de sus uniformes y la disciplina de los caballos. Es un lugar excelente para fotos y está a poca distancia del palacio.", links: [{ text: "The Household Cavalry Museum", url: "https://www.householdcavalrymuseum.org.uk/" }] },
-                            { time: "12:00 PM - 01:00 PM", name: "Paseo por St. James's Park", description: "Disfruta de un relajante paseo por uno de los parques reales más hermosos de Londres. **Imprescindible:** Busca los famosos pelícanos en el lago y las pintorescas vistas del Palacio de Buckingham y Horse Guards Parade a lo lejos. Un oasis de tranquilidad en la ciudad.", links: [{ text: "St. James's Park (Info)", url: "https://www.royalparks.org.uk/parks/st-jamess-park" }] },
-                            { time: "01:00 PM - 02:00 PM", name: "Big Ben y Westminster Bridge", description: "Cruza el icónico Puente de Westminster para obtener vistas espectaculares del Big Ben (Elizabeth Tower) y el Palacio de Westminster (Parlamento). **Imprescindible:** Toma fotos desde el puente con el Big Ben de fondo y admira la arquitectura gótica del Parlamento. El sonido de las campanas del Big Ben es inconfundible.", links: [{ text: "Parlamento Británico (Big Ben)", url: "https://www.parliament.uk/about/living-heritage/building/palace/big-ben/" }] },
-                            { time: "02:00 PM - 02:50 PM", name: "Almuerzo cerca de Westminster Abbey", description: "Una pausa para recargar energías con un almuerzo rápido en los alrededores de la Abadía de Westminster. Hay varias opciones de cafés y pequeños restaurantes." },
-                            { time: "02:50 PM - 03:45 PM", name: "Westminster Abbey - Ceremonia de Evensong (15:00 h / 3 PM)", description: "Asiste a la emotiva ceremonia de Evensong en esta histórica abadía, un momento de reflexión y música coral. **Imprescindible:** La entrada a la ceremonia es gratuita y te permite experimentar la majestuosidad del interior de la Abadía de una manera única, aunque no sea un tour turístico completo. Llega unos 10-15 minutos antes para asegurar asiento.", links: [{ text: "Westminster Abbey (Calendario)", url: "https://www.westminster-abbey.org/worship-music/services-calendar" }, { text: "Westminster Abbey (Visitas)", url: "https://www.westminster-abbey.org/visit-us" }] },
-                            { time: "03:45 PM - 04:15 PM", name: "Visita breve 'imperdible' en Westminster Abbey (Opcional)", description: "Si el tiempo y las regulaciones lo permiten después de Evensong, realiza una visita rápida a los puntos más destacados del interior de la Abadía, como el Rincón de los Poetas o la nave principal, para apreciar su arquitectura y significado histórico." },
-                            { time: "04:15 PM - 05:45 PM", name: "London Eye", description: "Disfruta de una perspectiva única de Londres desde lo alto de esta famosa noria gigante. **Imprescindible:** Las vistas panorámicas de 360 grados son espectaculares, permitiéndote ver el Big Ben, el Parlamento, la Catedral de San Pablo y muchos otros monumentos desde el aire, especialmente hermoso al atardecer.", links: [{ text: "London Eye (Reserva)", url: "https://www.londoneye.com/" }] },
-                            { time: "05:45 PM - 07:00 PM", name: "Paseo/Crucero por el Támesis", description: "Relájate con un paseo en barco por el río Támesis. **Imprescindible:** Obtén una vista diferente de Londres, pasando por debajo de puentes históricos y viendo monumentos como la Torre de Londres y el Tower Bridge desde el agua. Es una forma cómoda de descansar los pies.", links: [{ text: "City Cruises (Reserva)", url: "https://www.cityexperiences.com/london/city-cruises/" }, { text: "Uber Boat by Thames Clippers", url: "https://www.thamesclippers.com/" }] },
-                            { time: "07:00 PM - 08:00 PM", name: "Leake Street Arches (Graffiti Tunnel)", description: "Explora esta vibrante galería de arte callejero subterránea, donde artistas de graffiti crean constantemente nuevas obras. **Imprescindible:** Camina por el túnel y admira la explosión de colores y la creatividad en constante cambio. Un contraste moderno y alternativo con la historia del día." },
-                            { time: "08:00 PM en adelante", name: "Cena y regreso a Eastlight Apartments.", description: "Disfruta de una cena relajada en un restaurante local y regresa a tu alojamiento para descansar después de un día intenso." }
+                            { time: "09:30 - 11:45 AM", name: "Buckingham Palace - Sunday Parade:", description: "Sé testigo de la famosa ceremonia en la residencia oficial de la monarquía británica. **Imprescindible:** Asegúrate de llegar temprano (estar 1y1/2 hs antes) para conseguir ubicación.", links: [{ text: "Datos sobre Cambio de Guardia", url: "https://plantriplondon-com.translate.goog/changing-of-the-guard-london/?_x_tr_sl=en&_x_tr_tl=es&_x_tr_hl=es&_x_tr_pto=tc#June" }, { text: "Best Spots", url: "https://www.google.com/maps/d/edit?mid=1bh-yRn_Xa0abf68CyV6q-5dD0W414WE&usp=sharing" }] },
+                            { time: "11:45 AM - 12:15 PM", name: "Parliament Street (The Horse Guards)", description: "Admira a los impresionantes guardias a caballo en su puesto ceremonial en Horse Guards Parade. **Imprescindible:** Observa de cerca los detalles de sus uniformes y la disciplina de los caballos. Es un lugar excelente para fotos y está a poca distancia del palacio.", links: [{ text: "The Household Cavalry Museum", url: "https://www.householdcavalrymuseum.org.uk/" }] },
+                            { time: "12:15 PM - 01:15 PM", name: "Paseo por St. James's Park", description: "Disfruta de un relajante paseo por uno de los parques reales más hermosos de Londres. **Imprescindible:** Busca los famosos pelícanos en el lago y las pintorescas vistas del Palacio de Buckingham y Horse Guards Parade a lo lejos. Un oasis de tranquilidad en la ciudad.", links: [{ text: "St. James's Park (Info)", url: "https://www.royalparks.org.uk/parks/st-jamess-park" }] },
+                            { time: "01:15 PM - 02:15 PM", name: "Big Ben y Westminster Bridge", description: "Cruza el icónico Puente de Westminster para obtener vistas espectaculares del Big Ben (Elizabeth Tower) y el Palacio de Westminster (Parlamento). **Imprescindible:** Toma fotos desde el puente con el Big Ben de fondo y admira la arquitectura gótica del Parlamento. Cruzaremos el puente e iremos al BSE Memorial Plaque para la foto perfecta con el Big Ben, el parlamento y el puente de fondo. El sonido de las campanas del Big Ben es inconfundible. Caminar hasta el Lambeth Bridge", links: [{ text: "Parlamento Británico (Big Ben)", url: "https://www.parliament.uk/about/living-heritage/building/palace/big-ben/" }, { text: "Foto Perfecta del Big Ben", url: "https://www.google.com/maps/d/edit?mid=1uhqAdASxvca_sJaqcvPhn5GoGAV6gJU&usp=sharing" }] },
+                            { time: "02:15 PM - 03:05 PM", name: "Almuerzo cerca de Westminster Abbey", description: "Una pausa para recargar energías con un almuerzo rápido en los alrededores de la Abadía de Westminster. Hay varias opciones de cafés y pequeños restaurantes." },
+                            { time: "03:05 PM - 04:00 PM", name: "Westminster Abbey - Ceremonia de Evensong (15:00 h / 3 PM)", description: "Asiste a la emotiva ceremonia de Evensong en esta histórica abadía, un momento de reflexión y música coral. **Imprescindible:** La entrada a la ceremonia es gratuita y te permite experimentar la majestuosidad del interior de la Abadía de una manera única, aunque no sea un tour turístico completo. Llega unos 10-15 minutos antes para asegurar asiento.", links: [{ text: "Westminster Abbey (Calendario)", url: "https://www.westminster-abbey.org/worship-music/services-calendar" }, { text: "Westminster Abbey (Visitas)", url: "https://www.westminster-abbey.org/visit-us" }] },
+                            { time: "04:00 PM - 04:30 PM", name: "Visita breve 'imperdible' en Westminster Abbey (Opcional)", description: "Si el tiempo y las regulaciones lo permiten después de Evensong, realiza una visita rápida a los puntos más destacados del interior de la Abadía, como el Rincón de los Poetas o la nave principal, para apreciar su arquitectura y significado histórico." },
+                            { time: "04:30 PM - 05:45 PM", name: "Paseo/Crucero por el Támesis", description: "Relájate con un paseo en barco por el río Támesis. **Imprescindible:** Obtén una vista diferente de Londres, pasando por debajo de puentes históricos y viendo monumentos como la Torre de Londres y el Tower Bridge desde el agua. Es una forma cómoda de descansar los pies.", links: [{ text: "City Cruises (Reserva)", url: "https://www.cityexperiences.com/london/city-cruises/" }, { text: "Uber Boat by Thames Clippers", url: "https://www.thamesclippers.com/" }] },
+                            { time: "05:45 PM - 06:45 PM", name: "Leake Street Arches (Graffiti Tunnel)", description: "Explora esta vibrante galería de arte callejero subterránea, donde artistas de graffiti crean constantemente nuevas obras. **Imprescindible:** Camina por el túnel y admira la explosión de colores y la creatividad en constante cambio. Un contraste moderno y alternativo con la historia del día." },
+                            { time: "06:45 PM en adelante", name: "Cena y regreso a Eastlight Apartments.", description: "Disfruta de una cena relajada en un restaurante local y regresa a tu alojamiento para descansar después de un día intenso." }
                         ]
                     },
                     day4: {
@@ -249,11 +273,11 @@
                     },
                     day5: {
                         title: "Día 5: Martes 1 de julio - La City de Londres y las Torres",
-                        mapLink: "https://www.google.com/maps/dir/?api=1&origin=Tower+of+London&destination=St+Paul's+Cathedral&waypoints=Tower+Bridge|St.+Dunstan+in+the+East|Sky+Garden|Millennium+Bridge&travelmode=walking",
+                        mapLink: "https://www.google.com/maps/dir/?api=1&origin=Tower+of+London&destination=St+Paul's+Cathedral&waypoints=Tower+Bridge|St.+Katharine+Docks|Horsleydown+Steps|Shad+Thames|St.+Dunstan+in+the+East|Sky+Garden|Millennium+Bridge&travelmode=walking",
                         activities: [
                             { time: "09:30 AM - 10:00 AM", name: "Salida desde Eastlight Apartments", description: "Comienza tu día con un corto paseo desde tu alojamiento hasta la histórica Torre de Londres, aprovechando la cercanía para llegar temprano." },
-                            { time: "10:00 AM - 12:00 PM", name: "Tower of London (2 horas)", description: "Explora esta fortaleza histórica, Patrimonio de la Humanidad por la UNESCO. **Imprescindible:** Visita las Joyas de la Corona, admira la Torre Blanca (la estructura original), y si tienes suerte, coincide con un tour guiado por un Yeoman Warder (Beefeater) para escuchar historias fascinantes y a menudo macabras. No olvides buscar a los cuervos.", links: [{ text: "Tower of London (Reserva)", url: "https://www.hrp.org.uk/tower-of-london/" }] },
-                            { time: "12:00 PM - 01:30 PM", name: "Tower Bridge (1.5 horas - con exposición)", description: "Cruza y explora el icónico Tower Bridge, una obra maestra de la ingeniería victoriana. **Imprescindible:** Camina por las pasarelas superiores con suelo de cristal para vistas vertiginosas del Támesis y la ciudad, y visita las históricas salas de máquinas victorianas que explican cómo funciona el puente. Consulta los horarios de apertura del puente si te interesa verlo levantarse.", links: [{ text: "Tower Bridge Exhibition (Reserva)", url: "https://www.towerbridge.org.uk/plan-your-visit/buy-tickets" }] },
+                            { time: "10:00 AM - 12:00 PM", name: "Tower of London (2 horas)", description: "Explora esta fortaleza histórica, Patrimonio de la Humanidad por la UNESCO. **Imprescindible:** Visita las Joyas de la Corona, admira la Torre Blanca (la estructura original), y si tienes suerte, coincide con un tour guiado por un Yeoman Warder (Beefeater) para escuchar historias fascinantes y a menudo macabras. No olvides buscar a los cuervos.", links: [{ text: "Reservas Google Drive", url: "https://drive.google.com/drive/folders/1zJ1-devLu9cuCW10d7SrK8-QPpQllsFK?usp=drive_link" }] },
+                            { time: "12:00 PM - 01:30 PM", name: "Paseo por Tower Bridge y Alrededores (Muelles de St Katharine, Horsleydown Steps, Shad Thames)", description: "Disfruta de un agradable paseo por los alrededores del icónico Tower Bridge. **Imprescindible:** Recorre los **Muelles de St Katharine**, una marina silenciosa con lindas vistas del puente y un lindo paseo con lugares para sentarse a tomar algo. Luego, baja por los **Horsleydown Steps** para ver el puente de la torre desde abajo al lado del Támesis, una perspectiva única. Finaliza en **Shad Thames**, una calle histórica con viejos depósitos y pasarelas elevadas, perfecta para fotos. Este paseo ofrece múltiples puntos escénicos del puente sin la exposición pagada.", links: [{ text: "Desde dónde sacar fotos", url: "https://www.google.com/maps/d/edit?mid=1uhqAdASxvca_sJaqcvPhn5GoGAV6gJU&usp=sharing" }] },
                             { time: "01:30 PM - 02:30 PM", name: "Almuerzo cerca de Tower Bridge o en la City.", description: "Disfruta de un almuerzo en los alrededores de estas históricas atracciones o adéntrate un poco más en la City para encontrar opciones." },
                             { time: "02:30 PM - 03:00 PM", name: "St. Dunstan in the East (Iglesia Abandonada)", description: "Descubre este pintoresco jardín público construido entre las ruinas de una antigua iglesia bombardeada durante la Segunda Guerra Mundial. **Imprescindible:** Es un oasis de paz y belleza, con enredaderas cubriendo las paredes de la iglesia y creando un ambiente mágico. Perfecto para una pausa tranquila y fotos únicas.", links: [{ text: "St. Dunstan in the East (Info)", url: "https://www.cityoflondon.gov.uk/things-to-do/green-spaces/city-gardens/st-dunstan-in-the-east" }] },
                             { time: "03:00 PM - 04:30 PM", name: "Sky Garden", description: "Sube a este jardín público en lo alto de un rascacielos (el 'Walkie Talkie') para disfrutar de impresionantes vistas panorámicas de Londres. **Imprescindible:** Las vistas de 360 grados son espectaculares y gratuitas (con reserva previa). Disfruta de la exuberante vegetación y los miradores. ¡Recuerda reservar tu entrada con mucha antelación, ya que se agotan rápidamente!", links: [{ text: "Sky Garden (Reserva)", url: "https://skygarden.london/booking/" }] },
@@ -494,50 +518,6 @@
                         ]
                     }
                 }
-            },
-            dublin: {
-                name: "Dublín",
-                days: {
-                    day21: {
-                        title: "Día 21: Jueves 17 de julio - Viaje a Dublín y Primer Contacto",
-                        mapLink: null, // Travel day, no specific map needed
-                        activities: [
-                            { time: "08:00 AM - 09:00 AM", name: "Viaje: De Drummond Condo al aeropuerto de Edimburgo", description: "Dirígete al aeropuerto de Edimburgo para tu vuelo a Dublín." },
-                            { time: "11:40 AM - 12:45 PM", name: "Vuelo Edimburgo - Dublín (Ryanair)", description: "Vuelo de Edimburgo a Dublín. Asegúrate de llegar con suficiente antelación al aeropuerto." },
-                            { time: "2:00 PM - 2:40 PM", name: "Viaje: Dublin Express al Staycity Aparthotels", description: "Toma el autobús Dublin Express desde el aeropuerto hasta tu alojamiento en el centro de Dublín." },
-                            { time: "3:00 PM", name: "Check in hospedaje: Staycity Aparthotels, Dublin Christchurch", description: "Llegada y check-in en tu aparthotel en Dublín. El hospedaje permite check-in a partir de las 3:00 PM." },
-                            { time: "Tarde/Noche", name: "Primer paseo por Dublín y Cena", description: "Una vez acomodado, sal a dar un primer paseo por los alrededores de tu alojamiento y disfruta de una cena en un restaurante local." }
-                        ]
-                    },
-                    day22: {
-                        title: "Día 22: Viernes 18 de julio - Descubriendo el Corazón de Dublín",
-                        mapLink: "https://www.google.com/maps/dir/?api=1&origin=Trinity+College+Dublin&destination=Chester+Beatty+Library&waypoints=Grafton+Street|Temple+Bar,+Dublin|Dublin+Castle&travelmode=walking", // Walking in Dublin
-                        activities: [
-                            { time: "Mañana", name: "Explorando el Old Town: Trinity College y Grafton Street", description: "Comienza el día visitando el histórico **Trinity College**, hogar del famoso **Libro de Kells** (se recomienda reservar con antelación). Luego, pasea por **Grafton Street**, una de las calles comerciales más famosas de Dublín, conocida por sus artistas callejeros.", links: [{ text: "Trinity College Dublin", url: "https://www.tcd.ie/" }, { text: "Libro de Kells", url: "https://www.tcd.ie/library/old-library/book-of-kells/" }] },
-                            { time: "Tarde", name: "Explorando el Old Town: Temple Bar - Dublin Castle - Chester Beatty Library", description: "Sumérgete en el ambiente bohemio de **Temple Bar**, aunque es turístico, es un lugar icónico. Visita el **Castillo de Dublín**, con su rica historia, y explora la impresionante **Chester Beatty Library**, un museo gratuito con colecciones de manuscritos, grabados y arte de todo el mundo.", links: [{ text: "Temple Bar", url: "https://www.thetemplebarpub.com/" }, { text: "Dublin Castle", url: "https://www.dublincastle.ie/" }, { text: "Chester Beatty Library", url: "https://chesterbeatty.ie/" }] },
-                            { time: "Noche", name: "Cena y Música Tradicional Irlandesa", description: "Disfruta de una cena en un pub tradicional irlandés y, si es posible, asiste a una sesión de música en vivo para una auténtica experiencia dublinesa." }
-                        ]
-                    },
-                    day23: {
-                        title: "Día 23: Sábado 19 de julio - Cultura y Tradición en Dublín",
-                        mapLink: "https://www.google.com/maps/dir/?api=1&origin=Guinness+Storehouse&destination=Christ+Church+Cathedral,+Dublin&waypoints=Kilmainham+Gaol|St+Patrick's+Cathedral,+Dublin&travelmode=walking", // Walking in Dublin
-                        activities: [
-                            { time: "Mañana", name: "Guinness Storehouse o Kilmainham Gaol", description: "Elige entre dos experiencias icónicas: la **Guinness Storehouse** para aprender sobre la famosa cerveza irlandesa (con degustación y vistas panorámicas desde el Gravity Bar), o la histórica prisión de **Kilmainham Gaol**, un lugar clave en la historia de la independencia de Irlanda. Ambas requieren reserva previa.", links: [{ text: "Guinness Storehouse", url: "https://www.guinness-storehouse.com/" }, { text: "Kilmainham Gaol", url: "https://kilmainhamgaolmuseum.ie/" }] },
-                            { time: "Tarde", name: "Catedral de San Patricio y Christ Church Cathedral", description: "Visita dos de las catedrales más importantes de Dublín: la imponente **Catedral de San Patricio** y la antigua **Christ Church Cathedral**. Ambas ofrecen una rica historia y arquitectura.", links: [{ text: "Catedral de San Patricio", url: "https://www.stpatrickscathedral.ie/" }, { text: "Christ Church Cathedral", url: "https://christchurchcathedral.ie/" }] },
-                            { time: "Noche", name: "Tiempo libre y última cena en Dublín", description: "Disfruta de tus últimas horas en Dublín, quizás para comprar souvenirs, pasear por un parque o disfrutar de una última cena irlandesa." }
-                        ]
-                    },
-                    day24: {
-                        title: "Día 24: Domingo 20 de julio - Despedida de Dublín y Regreso a Casa",
-                        mapLink: null, // Travel day, no specific map needed
-                        activities: [
-                            { time: "05:30 AM - 06:30 AM", name: "Check out hospedaje: Staycity Aparthotels y Viaje al Aeropuerto de Dublín", description: "Realiza el check-out temprano de tu alojamiento y toma el autobús Dublin Express de regreso al aeropuerto de Dublín." },
-                            { time: "09:10 AM - 12:00 PM", name: "Vuelo Dublín (DUB) - París (CDG) (Air France)", description: "Vuelo de Dublín a París. Asegúrate de tener suficiente tiempo para tu conexión." },
-                            { time: "12:00 PM - 1:45 PM", name: "Transbordo en París", description: "Tiempo para el transbordo en el Aeropuerto Charles de Gaulle de París." },
-                            { time: "1:55 PM - 5:45 PM", name: "Vuelo París (CDG) - Ciudad de Panamá (PTY) (Air France)", description: "Vuelo de regreso a casa desde París a Ciudad de Panamá." }
-                        ]
-                    }
-                }
             }
         };
 
@@ -560,6 +540,22 @@
                     ${dayData.mapLink ? `<a href="${dayData.mapLink}" target="_blank" class="map-link">Ver Ruta en Google Maps</a>` : ''}
                     <div class="mt-6 space-y-4">
             `;
+
+            // Render travel info section if it exists
+            if (dayData.travelInfo && dayData.travelInfo.length > 0) {
+                html += `
+                    <div class="itinerary-item bg-blue-50 border-blue-400">
+                        <h3 class="text-xl font-semibold text-blue-800 mb-2">Información de Viaje</h3>
+                        <ul class="list-disc pl-5 text-gray-700 space-y-1">
+                `;
+                dayData.travelInfo.forEach(info => {
+                    html += `<li><strong>${info.title}</strong> ${info.description}</li>`;
+                });
+                html += `
+                        </ul>
+                    </div>
+                `;
+            }
 
             dayData.activities.forEach(activity => {
                 html += `
