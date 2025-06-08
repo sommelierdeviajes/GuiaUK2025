@@ -177,7 +177,6 @@
     </header>
 
     <main class="flex-grow container py-8">
-        <!-- Region Navigation -->
         <nav class="mb-4 flex flex-wrap justify-center gap-4 nav-main">
             <button class="region-button" data-region="london">Londres</button>
             <button class="region-button" data-region="englandRural">Inglaterra Rural</button>
@@ -187,14 +186,11 @@
             <button class="region-button" data-region="dublin">Dublín</button>
         </nav>
 
-        <!-- Day Navigation (Dynamically loaded) -->
         <nav id="day-buttons-container" class="mb-8 flex flex-wrap justify-center gap-2 nav-days">
-            <!-- Day buttons will be inserted here by JavaScript -->
-        </nav>
+            </nav>
 
         <div id="itinerary-content">
-            <!-- Content for each day will be loaded here by JavaScript -->
-        </div>
+            </div>
     </main>
 
     <footer class="bg-gray-800 text-white p-4 text-center rounded-t-xl mt-8">
@@ -400,7 +396,7 @@
                             { time: "4:00 PM - 6:00 PM", name: "Recorrido por Dolgellau", description: "Explora el encantador pueblo de Dolgellau, conocido por su arquitectura de pizarra y su entorno montañoso." },
                             { time: "6:00 PM - 7:00 PM", name: "Cena en Dolgellau", description: "Disfruta de una cena en Dolgellau." },
                             { time: "7:00 PM - 8:00 PM", name: "Viaje a Betws-y-Coed - The Swallow Falls Inn", description: "Continúa el viaje desde Dolgellau hasta tu hotel en Betws-y-Coed." },
-                            { time: "8:00 PM", name: "Llegada y Check-in en The Swallow Falls Inn", description: "Check-in y acomodación en <a href='https://www.inncollectiongroup.com/swallow-falls-inn/' target='_blank' class='text-blue-600 hover:underline'>The Swallow Falls Inn</a> en Betws-y-Coed.", links: [{ text: "Reserva", url: "https://drive.google.com/drive/folders/16HLKhq5YyItvoHP_kMRACwKIN5piRcF0?usp=drive_link" }] }
+                            { time: "8:00 PM", name: "Llegada y Check-in en The Swallow Falls Inn", description: "Check-in y acomodación en <a href='https://www.inncollectiongroup.com/swallow-falls-inn/' target='_blank' class='text-blue-600 hover:underline'>The Swallow Falls Inn</a> en Betws-y-Coed.", links: [{ text: "Reserva", url: "https://drive.google.com/drive/folders/16HLKhq5YyItvoHP_kMRACwKIN5piRcF0?usp=sharing" }] }
                         ]
                     },
                     day12: {
@@ -499,6 +495,24 @@
                             { time: "Tarde", name: "Catedral de St Giles y Victoria Street", description: "Visita la impresionante **Catedral de St Giles**, el principal lugar de culto de Edimburgo. Luego, pasea por la pintoresca **Victoria Street**, conocida por sus coloridas fachadas y tiendas únicas, que se curva hacia Grassmarket." , links: [{ text: "Catedral de St Giles", url: "https://www.stgilescathedral.org.uk/" }] },
                             { time: "Final de Tarde", name: "Grassmarket", description: "Explora el histórico **Grassmarket**, una plaza vibrante con pubs tradicionales y vistas del Castillo. **Imprescindible:** Disfruta del ambiente y quizás de una bebida en uno de los pubs históricos." },
                             { time: "Noche", name: "Cena en Edimburgo", description: "Disfruta de una cena en Edimburgo, con muchas opciones desde comida tradicional escocesa hasta cocina internacional." }
+                        ]
+                    },
+                    day19: {
+                        title: "Día 19: Martes 15 de julio - Edimburgo: Explorando el New Town",
+                        mapLink: "https://www.google.com/maps/dir/?api=1&origin=Edinburgh+Castle&destination=Grassmarket&waypoints=Royal+Mile|St+Giles'+Cathedral|Victoria+Street&travelmode=walking",
+                        activities: [
+                            { time: "08:00 - 09:00", name: "Desayuno en el hospedaje", description: "Disfruta de un desayuno en tu alojamiento." },
+                            { time: "Mañana", name: "Descubriendo el New Town: Princes Street Gardens - Scott Monument - Calton Hill", description: "Pasea por los **Princes Street Gardens**, admira el imponente **Scott Monument** y sube a **Calton Hill** para disfrutar de vistas panorámicas de la ciudad." },
+                            { time: "Tarde", name: "Descubriendo el New Town: Dean Village - Water of Leith Walkway - Stockbridge", description: "Explora el pintoresco **Dean Village**, pasea por el tranquilo **Water of Leith Walkway** y descubre el vibrante barrio de **Stockbridge**." },
+                            { time: "Noche", name: "Pub escocés tradicional", description: "Disfruta de una auténtica experiencia en un pub escocés tradicional para cenar y/o tomar algo." }
+                        ]
+                    },
+                    day20: {
+                        title: "Día 20: Miércoles 16 de julio - Edimburgo: Opciones y Actividades Alternativas",
+                        mapLink: "https://www.google.com/maps/dir/?api=1&origin=Edinburgh+Castle&destination=Grassmarket&waypoints=Royal+Mile|St+Giles'+Cathedral|Victoria+Street&travelmode=walking",
+                        activities: [
+                            { time: "08:00 - 09:00", name: "Desayuno en el hospedaje", description: "Disfruta de un desayuno en tu alojamiento." },
+                            { time: "Mañana/Tarde", name: "Actividades Alternativas: Real Mary King's Close y/o Jardín Botánico Real de Edimburgo", description: "Elige entre explorar los misteriosos pasadizos subterráneos de **Real Mary King's Close** (se recomienda reservar) o disfrutar de la tranquilidad y belleza del **Jardín Botánico Real de Edimburgo**." , links: [{ text: "The Real Mary King's Close", url: "https://www.realmarykingsclose.com/" }, { text: "Royal Botanic Garden Edinburgh", url: "https://www.rbge.org.uk/" }] }
                         ]
                     }
                 }
