@@ -11,6 +11,7 @@
             font-family: 'Inter', sans-serif;
             background-color: #f0f2f5; /* Light gray background */
             color: #333;
+            overflow-x: hidden; /* Prevent horizontal scroll when off-canvas is open */
         }
         .container {
             max-width: 1200px;
@@ -33,26 +34,103 @@
             animation: fadeInDown 0.8s ease-out forwards;
         }
 
-        /* Region Buttons */
+        /* Region Buttons for Desktop */
+        .nav-main-desktop {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+        }
         .region-button {
             padding: 0.75rem 1.5rem;
             border-radius: 0.5rem;
-            font-weight: 700; /* Bolder for main regions */
+            font-weight: 700;
             transition: all 0.2s ease-in-out;
             cursor: pointer;
             border: 1px solid transparent;
-            background-color: #4f46e5; /* Indigo 600 for regions */
+            background-color: #4f46e5;
             color: #ffffff;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         .region-button.active {
-            background-color: #3b82f6; /* Lighter blue for active region */
+            background-color: #3b82f6;
             box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
         }
         .region-button:not(.active):hover {
-            background-color: #6366f1; /* Indigo 500 on hover */
+            background-color: #6366f1;
             color: #ffffff;
         }
+
+        /* Hamburger Menu Icon */
+        .hamburger-menu-icon {
+            display: none; /* Hidden by default, shown on mobile */
+            cursor: pointer;
+            position: absolute;
+            right: 1rem;
+            top: 1.5rem;
+            z-index: 100; /* Above header text */
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            transition: background-color 0.2s ease;
+        }
+        .hamburger-menu-icon:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Off-canvas Menu for Mobile Regions */
+        .off-canvas-menu {
+            position: fixed;
+            top: 0;
+            left: -100%; /* Start off-screen */
+            width: 80%; /* Adjust as needed, or use full width */
+            max-width: 300px;
+            height: 100%;
+            background-color: #1a202c; /* Dark background for the menu */
+            color: #ffffff;
+            z-index: 99;
+            transition: left 0.3s ease-in-out;
+            padding-top: 5rem; /* Space for header/icon */
+            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .off-canvas-menu.active {
+            left: 0; /* Slide in */
+        }
+        .off-canvas-menu-item {
+            display: block;
+            padding: 1rem 1.5rem;
+            text-decoration: none;
+            color: #ffffff;
+            font-weight: 600;
+            transition: background-color 0.2s ease;
+            border-left: 5px solid transparent;
+        }
+        .off-canvas-menu-item:hover {
+            background-color: #2d3748; /* Slightly lighter dark gray */
+        }
+        .off-canvas-menu-item.active {
+            background-color: #3b82f6; /* Active blue */
+            border-left-color: #3b82f6;
+            font-weight: 700;
+        }
+
+        /* Overlay to darken content when menu is open */
+        .menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 90;
+        }
+        .menu-overlay.active {
+            display: block;
+        }
+
 
         /* Dropdown for Days */
         .day-select {
@@ -61,18 +139,18 @@
             font-weight: 600;
             transition: all 0.2s ease-in-out;
             cursor: pointer;
-            border: 1px solid #d1d5db; /* Gray 300 */
-            background-color: #e5e7eb; /* Gray 200 */
-            color: #374151; /* Dark gray text */
+            border: 1px solid #d1d5db;
+            background-color: #e5e7eb;
+            color: #374151;
             box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            appearance: none; /* Remove default arrow */
+            appearance: none;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd' /%3E%3C/svg%3E");
             background-repeat: no-repeat;
             background-position: right 0.75rem center;
             background-size: 1.5em 1.5em;
-            padding-right: 2.5rem; /* Make space for the custom arrow */
-            width: auto; /* Adjust width dynamically */
-            min-width: 200px; /* Minimum width for the dropdown */
+            padding-right: 2.5rem;
+            width: auto;
+            min-width: 200px;
         }
         .day-select:focus {
             outline: none;
@@ -81,12 +159,12 @@
         }
         .itinerary-item {
             background-color: white;
-            border-radius: 0.75rem; /* rounded-xl */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-md */
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             padding: 1.5rem;
             margin-bottom: 1rem;
             transition: transform 0.2s ease-in-out;
-            border-left: 4px solid #6366f1; /* Indigo 500 border */
+            border-left: 4px solid #6366f1;
         }
         .itinerary-item:hover {
             transform: translateY(-5px);
@@ -95,26 +173,26 @@
             display: inline-block;
             margin-top: 1rem;
             padding: 0.5rem 1rem;
-            background-color: #10b981; /* Tailwind emerald-500 */
+            background-color: #10b981;
             color: white;
-            border-radius: 0.5rem; /* rounded-lg */
+            border-radius: 0.5rem;
             text-decoration: none;
             font-weight: 600;
             transition: background-color 0.2s ease-in-out;
         }
         .map-link:hover {
-            background-color: #059669; /* Tailwind emerald-600 */
+            background-color: #059669;
         }
 
         .section-title {
-            color: #1e3a8a; /* Darker blue for titles, from Gales code */
+            color: #1e3a8a;
             font-size: 2.25rem;
             font-weight: 700;
             margin-bottom: 1.5rem;
             text-align: center;
         }
         .itinerary-item h3 {
-            color: #4338ca; /* Indigo 700 */
+            color: #4338ca;
             font-weight: 700;
             margin-bottom: 0.5rem;
         }
@@ -122,7 +200,7 @@
             margin-bottom: 0.5rem;
         }
         .itinerary-item a {
-            color: #3b82f6; /* Blue 500 */
+            color: #3b82f6;
             text-decoration: none;
             font-weight: 500;
         }
@@ -130,8 +208,8 @@
             text-decoration: underline;
         }
         .family-friendly-tag {
-            background-color: #d1fae5; /* Light green */
-            color: #065f46; /* Dark green */
+            background-color: #d1fae5;
+            color: #065f46;
             font-weight: 600;
             padding: 0.25rem 0.75rem;
             border-radius: 0.5rem;
@@ -140,29 +218,35 @@
             display: inline-block;
         }
 
-        /* Adjustments for smaller screens */
-        @media (max-width: 768px) {
-            .nav-main {
-                flex-direction: column; /* Stack region buttons vertically */
+        /* Media Queries for Responsiveness */
+        @media (min-width: 769px) { /* Desktop */
+            .hamburger-menu-icon, .off-canvas-menu, .menu-overlay {
+                display: none !important; /* Hide hamburger menu and off-canvas on desktop */
             }
-            .region-button {
-                width: 100%; /* Make buttons full width */
-                margin-bottom: 0.5rem; /* Add some space between stacked buttons */
+            .nav-main-desktop {
+                display: flex; /* Show desktop region buttons */
             }
-            #day-buttons-container {
-                /* For the dropdown, we don't need horizontal scrolling as it's a single element */
-                flex-direction: row; /* Keep it as row for centering the dropdown */
-                justify-content: center; /* Center the dropdown */
+        }
+
+        @media (max-width: 768px) { /* Mobile */
+            .nav-main-desktop {
+                display: none; /* Hide desktop region buttons on mobile */
+            }
+            .hamburger-menu-icon {
+                display: block; /* Show hamburger icon on mobile */
             }
             .day-select {
-                width: 100%; /* Make dropdown full width on small screens */
-                min-width: unset; /* Remove min-width constraint */
+                width: 100%;
+                min-width: unset;
+            }
+            #day-buttons-container {
+                justify-content: center;
             }
         }
     </style>
 </head>
 <body class="min-h-screen flex flex-col antialiased">
-    <header class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white p-6 shadow-lg rounded-b-xl animated-header">
+    <header class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white p-6 shadow-lg rounded-b-xl animated-header relative">
         <div class="container text-center">
             <h1 class="text-4xl font-bold mb-2 flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8 mr-3">
@@ -173,10 +257,27 @@
             </h1>
             <p class="text-lg">Itinerario detallado, con información clave, enlaces útiles y mapas.</p>
         </div>
+        <!-- Hamburger Menu Icon for Mobile -->
+        <div class="hamburger-menu-icon" id="hamburger-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-8 h-8 text-white">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+            </svg>
+        </div>
     </header>
 
+    <!-- Off-canvas Menu for Mobile Regions -->
+    <div class="off-canvas-menu" id="off-canvas-menu">
+        <button class="off-canvas-close-button absolute top-4 right-4 text-white text-2xl" id="off-canvas-close-button">&times;</button>
+        <div class="off-canvas-menu-inner" id="off-canvas-menu-inner">
+            <!-- Region links will be dynamically generated here -->
+        </div>
+    </div>
+    <div class="menu-overlay" id="menu-overlay"></div>
+
+
     <main class="flex-grow container py-8">
-        <nav class="mb-4 flex flex-wrap justify-center gap-4 nav-main">
+        <!-- Desktop Region Buttons (hidden on mobile) -->
+        <nav class="mb-4 nav-main-desktop" id="desktop-region-nav">
             <button class="region-button" data-region="london">Londres</button>
             <button class="region-button" data-region="englandRural">Inglaterra Rural</button>
             <button class="region-button" data-region="wales">Gales</button>
@@ -432,7 +533,7 @@
                             { time: "09:00 AM - 09:20 AM", name: "Viaje al Tourist Information Centre", description: "Comienza tu día dirigiéndote al centro de información turística.", links: [{ text: "Google Maps", url: "https://maps.app.goo.gl/jNTZe5HGM5DLaBuHA" }] },
                             { time: "09:20 AM - 10:00 AM", name: "Tourist Information Centre", description: "Averigua y no te pierdas de nada.", links: [{ text: "Tourist Information Centre - Betws-y-Coed", url: "https://www.visitconwy.org.uk/information/product-catch-all/tourist-information-centre-betws-y-coed-p321181" }] },
                             { time: "10:00 AM - 10:45 AM", name: "Viaje al Castillo de Conwy", description: "Viaje en coche hacia el histórico Castillo de Conwy.", links: [{ text: "Google Maps", url: "https://maps.app.goo.gl/8Qbj5Hf3ShKwVJjz6" }] },
-                            { time: "11:00 AM - 02:00 PM", name: "Castillo de Conwy y alrededores", description: "Explora el impresionante Castillo de Conwy y sus murallas. Dedica tiempo a recorrer este sitio Patrimonio de la Humanidad y disfrutar de las vistas.", links: [{ text: "Castillo de Conwy", url: "https://cadw.gov.wales/visit/places-to-visit/castell-conwy" }] },
+                            { time: "11:00 AM - 02:00 PM", name: "Castillo de Conwy y alrededores", description: "Explora el impresionante Castillo de Conwy y sus murallas. Dedica tiempo a recorrer este sitio Patrimonio de la Humanidad y disfrutar de las vistas.", links: [{ text: "Castillo de Conwy", url: "https://cadw.gov.wales/visit/places-to-visit/castell-caernarfon" }] },
                             { time: "02:00 PM - 03:00 PM", name: "Almuerzo en Conwy", description: "Disfruta de un almuerzo en uno de los encantadores pubs o cafeterías de Conwy." },
                             { time: "02:00 PM - 02:45 PM", name: "Viaje a Bethesda", description: "Viaje en coche a Bethesda.", links: [{ text: "Google Maps", url: "https://maps.app.goo.gl/X4SBNFGkjeGaRZgv5" }] },
                             { time: "03:00 PM - 04:00 PM", name: "Bethesda", description: "Explora la zona de Bethesda, conocida por sus paisajes y la cantera de pizarra de Penrhyn." },
@@ -755,11 +856,21 @@
          * @param {string} activeDay - The currently active day key.
          */
         function updateButtonActiveStates(activeRegion, activeDay) {
-            // Update active region button
-            regionButtons.forEach(button => {
+            // Update active region button (for desktop view)
+            const desktopRegionButtons = document.querySelectorAll('#desktop-region-nav .region-button');
+            desktopRegionButtons.forEach(button => {
                 button.classList.remove('active');
                 if (button.dataset.region === activeRegion) {
                     button.classList.add('active');
+                }
+            });
+
+            // Update active region item in off-canvas menu (for mobile view)
+            const offCanvasRegionItems = document.querySelectorAll('#off-canvas-menu-inner .off-canvas-menu-item');
+            offCanvasRegionItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.dataset.region === activeRegion) {
+                    item.classList.add('active');
                 }
             });
 
@@ -770,8 +881,51 @@
             }
         }
 
-        // Event listeners for region buttons (modified to use navigateToDay for initial day of region)
-        regionButtons.forEach(button => {
+        // --- Hamburger Menu Logic ---
+        const hamburgerIcon = document.getElementById('hamburger-icon');
+        const offCanvasMenu = document.getElementById('off-canvas-menu');
+        const offCanvasCloseButton = document.getElementById('off-canvas-close-button');
+        const menuOverlay = document.getElementById('menu-overlay');
+        const offCanvasMenuInner = document.getElementById('off-canvas-menu-inner');
+
+        function toggleOffCanvasMenu() {
+            offCanvasMenu.classList.toggle('active');
+            menuOverlay.classList.toggle('active');
+            // Prevent body scroll when menu is open
+            document.body.style.overflow = offCanvasMenu.classList.contains('active') ? 'hidden' : '';
+        }
+
+        hamburgerIcon.addEventListener('click', toggleOffCanvasMenu);
+        offCanvasCloseButton.addEventListener('click', toggleOffCanvasMenu);
+        menuOverlay.addEventListener('click', toggleOffCanvasMenu); // Close when clicking outside
+
+        /**
+         * Renders the region links inside the off-canvas menu.
+         */
+        function renderOffCanvasRegions() {
+            offCanvasMenuInner.innerHTML = ''; // Clear previous content
+            for (const regionKey in itineraryData) {
+                const region = itineraryData[regionKey];
+                const regionLink = document.createElement('a');
+                regionLink.href = "#"; // Prevent page reload
+                regionLink.classList.add('off-canvas-menu-item');
+                regionLink.textContent = region.name;
+                regionLink.dataset.region = regionKey;
+                regionLink.addEventListener('click', (event) => {
+                    event.preventDefault(); // Prevent default link behavior
+                    const newRegionKey = event.target.dataset.region;
+                    const firstDayKey = Object.keys(itineraryData[newRegionKey].days)[0];
+                    navigateToDay(newRegionKey, firstDayKey);
+                    toggleOffCanvasMenu(); // Close menu after selection
+                });
+                offCanvasMenuInner.appendChild(regionLink);
+            }
+        }
+
+
+        // Event listeners for desktop region buttons (re-added as they are now conditionally displayed)
+        const desktopRegionButtons = document.querySelectorAll('#desktop-region-nav .region-button');
+        desktopRegionButtons.forEach(button => {
             button.addEventListener('click', () => {
                 const regionKey = button.dataset.region;
                 const firstDayKey = Object.keys(itineraryData[regionKey].days)[0];
@@ -779,13 +933,12 @@
             });
         });
 
+
         // Handle browser's back/forward buttons
         window.addEventListener('popstate', (event) => {
             if (event.state) {
-                // If there's a state object, use it to navigate without pushing new state
                 navigateToDay(event.state.region, event.state.day, false);
             } else {
-                // If no state (e.g., initial load or direct URL access), parse URL params
                 parseUrlAndNavigate();
             }
         });
@@ -799,16 +952,15 @@
             const dayParam = urlParams.get('day');
 
             if (regionParam && dayParam) {
-                // Navigate to the day specified in the URL, but don't push state again
                 navigateToDay(regionParam, dayParam, false);
             } else {
-                // If no params, default to London, Day 1 and push state to clean URL
                 navigateToDay('london', 'day1', true);
             }
         }
 
-        // Initial load: Parse URL params or default to London, Day 1
+        // Initial load: Render off-canvas regions and then parse URL or default.
         document.addEventListener('DOMContentLoaded', () => {
+            renderOffCanvasRegions(); // Render regions for the mobile menu first
             parseUrlAndNavigate();
         });
     </script>
