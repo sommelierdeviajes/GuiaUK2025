@@ -431,7 +431,7 @@
                             { time: "08:00 AM - 09:00 AM", name: "Desayuno en The Swallow Falls Inn (incluido)", description: "Disfruta de un desayuno en el hotel." },
                             { time: "09:00 AM - 09:20 AM", name: "Viaje al Tourist Information Centre", description: "Comienza tu día dirigiéndote al centro de información turística.", links: [{ text: "Google Maps", url: "https://maps.app.goo.gl/jNTZe5HGM5DLaBuHA" }] },
                             { time: "09:20 AM - 10:00 AM", name: "Tourist Information Centre", description: "Averigua y no te pierdas de nada.", links: [{ text: "Tourist Information Centre - Betws-y-Coed", url: "https://www.visitconwy.org.uk/information/product-catch-all/tourist-information-centre-betws-y-coed-p321181" }] },
-                            { time: "10:00 AM - 10:45 AM", name: "Viaje al Castillo de Conwy", description: "Viaje en coche hacia el histórico Castillo de Conwy.", links: [{ text: "Google Maps", url: "https://maps.app.goo.com/8Qbj5Hf3ShKwVJjz6" }] },
+                            { time: "10:00 AM - 10:45 AM", name: "Viaje al Castillo de Conwy", description: "Viaje en coche hacia el histórico Castillo de Conwy.", links: [{ text: "Google Maps", url: "https://maps.app.goo.gl/8Qbj5Hf3ShKwVJjz6" }] },
                             { time: "11:00 AM - 02:00 PM", name: "Castillo de Conwy y alrededores", description: "Explora el impresionante Castillo de Conwy y sus murallas. Dedica tiempo a recorrer este sitio Patrimonio de la Humanidad y disfrutar de las vistas.", links: [{ text: "Castillo de Conwy", url: "https://cadw.gov.wales/visit/places-to-visit/castell-conwy" }] },
                             { time: "02:00 PM - 03:00 PM", name: "Almuerzo en Conwy", description: "Disfruta de un almuerzo en uno de los encantadores pubs o cafeterías de Conwy." },
                             { time: "02:00 PM - 02:45 PM", name: "Viaje a Bethesda", description: "Viaje en coche a Bethesda.", links: [{ text: "Google Maps", url: "https://maps.app.goo.gl/X4SBNFGkjeGaRZgv5" }] },
@@ -613,10 +613,12 @@
 
         /**
          * Navigates to a specific day in the itinerary and re-renders the content.
+         * Also updates the URL for direct linking.
          * @param {string} regionKey - The key of the region (e.g., 'london', 'scotland').
          * @param {string} dayKey - The key of the day within the region (e.g., 'day1', 'day4').
+         * @param {boolean} [pushState=true] - Whether to push a new state to history (default: true).
          */
-        function navigateToDay(regionKey, dayKey) {
+        function navigateToDay(regionKey, dayKey, pushState = true) {
             // Validate region and day existence
             const regionExists = itineraryData[regionKey];
             const dayExists = regionExists && itineraryData[regionKey].days[dayKey];
@@ -643,6 +645,12 @@
 
             // Update the active state of the region and day buttons
             updateButtonActiveStates(currentRegion, currentDay);
+
+            // Update URL for direct linking only if pushState is true
+            if (pushState) {
+                const newUrl = `${window.location.pathname}?region=${currentRegion}&day=${currentDay}`;
+                history.pushState({ region: currentRegion, day: currentDay }, '', newUrl);
+            }
         }
 
         /**
@@ -759,9 +767,37 @@
             });
         });
 
-        // Initial load: Default to London, Day 1
+        // Handle browser's back/forward buttons
+        window.addEventListener('popstate', (event) => {
+            if (event.state) {
+                // If there's a state object, use it to navigate without pushing new state
+                navigateToDay(event.state.region, event.state.day, false);
+            } else {
+                // If no state (e.g., initial load or direct URL access), parse URL params
+                parseUrlAndNavigate();
+            }
+        });
+
+        /**
+         * Parses URL parameters and navigates to the corresponding region and day.
+         */
+        function parseUrlAndNavigate() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const regionParam = urlParams.get('region');
+            const dayParam = urlParams.get('day');
+
+            if (regionParam && dayParam) {
+                // Navigate to the day specified in the URL, but don't push state again
+                navigateToDay(regionParam, dayParam, false);
+            } else {
+                // If no params, default to London, Day 1 and push state to clean URL
+                navigateToDay('london', 'day1', true);
+            }
+        }
+
+        // Initial load: Parse URL params or default to London, Day 1
         document.addEventListener('DOMContentLoaded', () => {
-            navigateToDay('london', 'day1');
+            parseUrlAndNavigate();
         });
     </script>
 </body>
