@@ -54,30 +54,31 @@
             color: #ffffff;
         }
 
-        /* Day Buttons (Sub-navigation) */
-        .day-button {
-            padding: 0.6rem 1.2rem; /* Slightly smaller than region buttons */
+        /* Dropdown for Days */
+        .day-select {
+            padding: 0.6rem 1.2rem;
             border-radius: 0.5rem;
             font-weight: 600;
             transition: all 0.2s ease-in-out;
             cursor: pointer;
-            border: 1px solid transparent;
+            border: 1px solid #d1d5db; /* Gray 300 */
             background-color: #e5e7eb; /* Gray 200 */
             color: #374151; /* Dark gray text */
             box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            white-space: nowrap; /* Prevent wrapping within a single button */
-            flex-shrink: 0; /* Prevent buttons from shrinking */
+            appearance: none; /* Remove default arrow */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd' /%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem; /* Make space for the custom arrow */
+            width: auto; /* Adjust width dynamically */
+            min-width: 200px; /* Minimum width for the dropdown */
         }
-        .day-button.active {
-            background-color: #3b82f6; /* Tailwind blue-500 */
-            color: white;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        .day-select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
         }
-        .day-button:not(.active):hover {
-            background-color: #d1d5db; /* Gray 300 */
-            color: #1f2937; /* Even darker gray */
-        }
-
         .itinerary-item {
             background-color: white;
             border-radius: 0.75rem; /* rounded-xl */
@@ -141,23 +142,21 @@
 
         /* Adjustments for smaller screens */
         @media (max-width: 768px) {
-            .nav-main, .nav-days {
+            .nav-main {
                 flex-direction: column; /* Stack region buttons vertically */
             }
-            .region-button, .day-button {
+            .region-button {
                 width: 100%; /* Make buttons full width */
                 margin-bottom: 0.5rem; /* Add some space between stacked buttons */
             }
-            /* Allow horizontal scrolling for day buttons if they exceed width */
             #day-buttons-container {
-                overflow-x: auto;
-                flex-direction: row; /* Keep day buttons in a row for scrolling */
-                justify-content: flex-start; /* Align to start for easier scrolling */
-                padding-bottom: 0.5rem; /* Space for scrollbar */
+                /* For the dropdown, we don't need horizontal scrolling as it's a single element */
+                flex-direction: row; /* Keep it as row for centering the dropdown */
+                justify-content: center; /* Center the dropdown */
             }
-            .day-button {
-                font-size: 0.875rem; /* Smaller font size for day buttons */
-                padding: 0.5rem 1rem; /* Adjust padding */
+            .day-select {
+                width: 100%; /* Make dropdown full width on small screens */
+                min-width: unset; /* Remove min-width constraint */
             }
         }
     </style>
@@ -187,7 +186,8 @@
         </nav>
 
         <nav id="day-buttons-container" class="mb-8 flex flex-wrap justify-center gap-2 nav-days">
-            </nav>
+            <!-- Day dropdown will be rendered here -->
+        </nav>
 
         <div id="itinerary-content">
             </div>
@@ -606,7 +606,7 @@
 
         const itineraryContent = document.getElementById('itinerary-content');
         const regionButtons = document.querySelectorAll('.region-button');
-        const dayButtonsContainer = document.getElementById('day-buttons-container');
+        const dayButtonsContainer = document.getElementById('day-buttons-container'); // This will now hold the select element
 
         let currentRegion = 'london'; // Default active region
         let currentDay = 'day1'; // Default active day
@@ -640,10 +640,10 @@
             // Render the content for the selected day
             renderDayContent(currentDay, currentRegion);
 
-            // Re-render the day buttons for the current region (important if region changed)
-            renderDayButtons(currentRegion);
+            // Re-render the day dropdown for the current region (important if region changed)
+            renderDayDropdown(currentRegion);
 
-            // Update the active state of the region and day buttons
+            // Update the active state of the region button and selected option in dropdown
             updateButtonActiveStates(currentRegion, currentDay);
 
             // Update URL for direct linking only if pushState is true
@@ -707,11 +707,11 @@
         }
 
         /**
-         * Renders the day selection buttons for the specified region.
+         * Renders the day selection dropdown for the specified region.
          * @param {string} regionKey - The key of the region whose days are to be displayed.
          */
-        function renderDayButtons(regionKey) {
-            dayButtonsContainer.innerHTML = ''; // Clear previous day buttons
+        function renderDayDropdown(regionKey) {
+            dayButtonsContainer.innerHTML = ''; // Clear previous content
 
             const regionDays = itineraryData[regionKey].days;
             const dayKeys = Object.keys(regionDays);
@@ -721,21 +721,36 @@
                 return;
             }
 
+            const selectElement = document.createElement('select');
+            selectElement.id = 'day-select-dropdown';
+            selectElement.classList.add('day-select'); // Apply custom styling
+
+            // Add a default "Select Day" option or the first day
+            if (!currentDay || !regionDays[currentDay]) {
+                // If currentDay is invalid or not set for the new region, default to the first day
+                currentDay = dayKeys[0];
+            }
+
             dayKeys.forEach(dayKey => {
-                const dayButton = document.createElement('button');
-                dayButton.classList.add('day-button');
-                dayButton.dataset.day = dayKey;
-                dayButton.textContent = regionDays[dayKey].title;
-                // Use navigateToDay for handling clicks on day buttons
-                dayButton.addEventListener('click', () => {
-                    navigateToDay(regionKey, dayKey);
-                });
-                dayButtonsContainer.appendChild(dayButton);
+                const option = document.createElement('option');
+                option.value = dayKey;
+                option.textContent = regionDays[dayKey].title;
+                selectElement.appendChild(option);
             });
+
+            // Set the selected value after all options are added
+            selectElement.value = currentDay;
+
+            // Add event listener for dropdown change
+            selectElement.addEventListener('change', (event) => {
+                navigateToDay(regionKey, event.target.value);
+            });
+
+            dayButtonsContainer.appendChild(selectElement);
         }
 
         /**
-         * Updates the 'active' class on region and day buttons based on the current selection.
+         * Updates the 'active' class on region button and the selected option in the day dropdown.
          * @param {string} activeRegion - The currently active region key.
          * @param {string} activeDay - The currently active day key.
          */
@@ -748,14 +763,11 @@
                 }
             });
 
-            // Update active day button
-            const allDayButtons = dayButtonsContainer.querySelectorAll('.day-button');
-            allDayButtons.forEach(button => {
-                button.classList.remove('active');
-                if (button.dataset.day === activeDay) {
-                    button.classList.add('active');
-                }
-            });
+            // Update selected option in the day dropdown
+            const dayDropdown = document.getElementById('day-select-dropdown');
+            if (dayDropdown) {
+                dayDropdown.value = activeDay;
+            }
         }
 
         // Event listeners for region buttons (modified to use navigateToDay for initial day of region)
