@@ -169,20 +169,20 @@
         .itinerary-item:hover {
             transform: translateY(-5px);
         }
-        .map-link {
-            display: inline-block;
-            margin-top: 1rem;
-            padding: 0.5rem 1rem;
-            background-color: #10b981;
-            color: white;
-            border-radius: 0.5rem;
+
+        /* Remove .map-link and .reservation-link custom CSS rules,
+           as they will be handled by Tailwind classes directly in JS. */
+
+        /* Remove the general .itinerary-item a rules to avoid conflicts */
+        /* .itinerary-item a {
+            color: #3b82f6;
             text-decoration: none;
-            font-weight: 600;
-            transition: background-color 0.2s ease-in-out;
+            font-weight: 500;
         }
-        .map-link:hover {
-            background-color: #059669;
-        }
+        .itinerary-item a:hover {
+            text-decoration: underline;
+        } */
+
 
         .section-title {
             color: #1e3a8a;
@@ -198,14 +198,6 @@
         }
         .itinerary-item p {
             margin-bottom: 0.5rem;
-        }
-        .itinerary-item a {
-            color: #3b82f6;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        .itinerary-item a:hover {
-            text-decoration: underline;
         }
         .family-friendly-tag {
             background-color: #d1fae5;
@@ -760,7 +752,7 @@
             let html = `
                 <div class="bg-white p-6 rounded-xl shadow-lg">
                     <h2 class="section-title mb-4">${dayData.title}</h2>
-                    ${dayData.mapLink ? `<a href="${dayData.mapLink}" target="_blank" class="map-link">Ver Ruta en Google Maps</a>` : ''}
+                    ${dayData.mapLink ? `<a href="${dayData.mapLink}" target="_blank" class="inline-block mt-4 px-4 py-2 bg-emerald-500 text-white rounded-lg font-semibold transition-colors duration-200 hover:bg-emerald-600">Ver Ruta en Google Maps</a>` : ''}
                     <div class="mt-6 space-y-4">
             `;
 
@@ -772,7 +764,16 @@
                         <ul class="list-disc pl-5 text-gray-700 space-y-1">
                 `;
                 dayData.travelInfo.forEach(info => {
-                    html += `<li><strong>${info.title}</strong> ${info.description}</li>`;
+                    // Regex to find existing <a> tags in the description and apply classes
+                    let descriptionWithFormattedLinks = info.description.replace(/<a href='(.*?)' target='_blank' class='(.*?)'>(.*?)<\/a>/g, (match, url, currentClasses, text) => {
+                        const isReservationInfoLink = text.toLowerCase().includes('reserva');
+                        // Tailwind classes for buttons (if it's a reservation link) or default blue link
+                        const newClasses = isReservationInfoLink 
+                            ? "inline-block mt-1 px-3 py-1 bg-red-500 text-white rounded-md font-semibold transition-colors duration-200 hover:bg-red-600" 
+                            : "text-blue-600 hover:underline";
+                        return `<a href='${url}' target='_blank' class='${newClasses}'>${text}</a>`;
+                    });
+                    html += `<li><strong>${info.title}</strong> ${descriptionWithFormattedLinks}</li>`;
                 });
                 html += `
                         </ul>
@@ -789,7 +790,16 @@
                 if (activity.links && activity.links.length > 0) {
                     html += `<div class="flex flex-wrap gap-2 mt-2">`;
                     activity.links.forEach(link => {
-                        html += `<a href="${link.url}" target="_blank" class="text-blue-600 hover:underline text-sm">${link.text}</a>`;
+                        const isReservationLink = link.text.toLowerCase().includes('reserva');
+                        // Base styling for all links within activities
+                        let linkClasses = "inline-block px-3 py-1 rounded-md font-semibold transition-colors duration-200 ease-in-out text-sm";
+                        
+                        if (isReservationLink) {
+                            linkClasses += " bg-red-500 text-white hover:bg-red-600"; // Red button style for reservation links
+                        } else {
+                            linkClasses += " text-blue-600 hover:underline"; // Standard blue link style
+                        }
+                        html += `<a href="${link.url}" target="_blank" class="${linkClasses}">${link.text}</a>`;
                     });
                     html += `</div>`;
                 }
