@@ -609,14 +609,49 @@
         const dayButtonsContainer = document.getElementById('day-buttons-container');
 
         let currentRegion = 'london'; // Default active region
+        let currentDay = 'day1'; // Default active day
 
-        function renderDay(dayKey, regionKey = currentRegion) {
-            const dayData = itineraryData[regionKey].days[dayKey];
-            if (!dayData) {
-                itineraryContent.innerHTML = '<p class="text-center text-red-500">No se encontró información para este día.</p>';
-                return;
+        /**
+         * Navigates to a specific day in the itinerary and re-renders the content.
+         * @param {string} regionKey - The key of the region (e.g., 'london', 'scotland').
+         * @param {string} dayKey - The key of the day within the region (e.g., 'day1', 'day4').
+         */
+        function navigateToDay(regionKey, dayKey) {
+            // Validate region and day existence
+            const regionExists = itineraryData[regionKey];
+            const dayExists = regionExists && itineraryData[regionKey].days[dayKey];
+
+            // Fallback to default if provided keys are invalid
+            if (!regionExists) {
+                console.warn(`Region '${regionKey}' not found. Falling back to 'london'.`);
+                regionKey = 'london';
+                dayKey = 'day1'; // Default to first day of default region
+            } else if (!dayExists) {
+                console.warn(`Day '${dayKey}' not found in region '${regionKey}'. Falling back to first day of region.`);
+                dayKey = Object.keys(itineraryData[regionKey].days)[0]; // Get the first day key
             }
 
+            // Update the global currentRegion and currentDay variables
+            currentRegion = regionKey;
+            currentDay = dayKey;
+
+            // Render the content for the selected day
+            renderDayContent(currentDay, currentRegion);
+
+            // Re-render the day buttons for the current region (important if region changed)
+            renderDayButtons(currentRegion);
+
+            // Update the active state of the region and day buttons
+            updateButtonActiveStates(currentRegion, currentDay);
+        }
+
+        /**
+         * Renders the detailed itinerary content for a specific day.
+         * @param {string} dayKey - The key of the day to render.
+         * @param {string} regionKey - The key of the region the day belongs to.
+         */
+        function renderDayContent(dayKey, regionKey) {
+            const dayData = itineraryData[regionKey].days[dayKey];
             let html = `
                 <div class="bg-white p-6 rounded-xl shadow-lg">
                     <h2 class="section-title mb-4">${dayData.title}</h2>
@@ -661,62 +696,72 @@
                 </div>
             `;
             itineraryContent.innerHTML = html;
-
-            // Update active day button state
-            const allDayButtons = dayButtonsContainer.querySelectorAll('.day-button');
-            allDayButtons.forEach(button => button.classList.remove('active'));
-            const activeDayButton = dayButtonsContainer.querySelector(`.day-button[data-day="${dayKey}"]`);
-            if (activeDayButton) {
-                activeDayButton.classList.add('active');
-            }
         }
 
-        function renderRegionDays(regionKey) {
-            currentRegion = regionKey;
-
-            // Update active region button state
-            regionButtons.forEach(button => button.classList.remove('active'));
-            document.querySelector(`.region-button[data-region="${regionKey}"]`).classList.add('active');
-
-            // Clear previous day buttons
-            dayButtonsContainer.innerHTML = '';
+        /**
+         * Renders the day selection buttons for the specified region.
+         * @param {string} regionKey - The key of the region whose days are to be displayed.
+         */
+        function renderDayButtons(regionKey) {
+            dayButtonsContainer.innerHTML = ''; // Clear previous day buttons
 
             const regionDays = itineraryData[regionKey].days;
             const dayKeys = Object.keys(regionDays);
 
             if (dayKeys.length === 0) {
                 dayButtonsContainer.innerHTML = '<p class="text-center text-gray-600">No hay días planificados para esta región aún.</p>';
-                itineraryContent.innerHTML = '<p class="text-center text-gray-600">Selecciona otra región o espera a que se añadan más días.</p>';
                 return;
             }
 
-            // Create and append new day buttons
             dayKeys.forEach(dayKey => {
                 const dayButton = document.createElement('button');
                 dayButton.classList.add('day-button');
                 dayButton.dataset.day = dayKey;
-                // Use the full title for the day button
                 dayButton.textContent = regionDays[dayKey].title;
+                // Use navigateToDay for handling clicks on day buttons
                 dayButton.addEventListener('click', () => {
-                    renderDay(dayKey, regionKey);
+                    navigateToDay(regionKey, dayKey);
                 });
                 dayButtonsContainer.appendChild(dayButton);
             });
-
-            // Render the first day of the selected region by default
-            renderDay(dayKeys[0], regionKey);
         }
 
-        // Event listeners for region buttons
+        /**
+         * Updates the 'active' class on region and day buttons based on the current selection.
+         * @param {string} activeRegion - The currently active region key.
+         * @param {string} activeDay - The currently active day key.
+         */
+        function updateButtonActiveStates(activeRegion, activeDay) {
+            // Update active region button
+            regionButtons.forEach(button => {
+                button.classList.remove('active');
+                if (button.dataset.region === activeRegion) {
+                    button.classList.add('active');
+                }
+            });
+
+            // Update active day button
+            const allDayButtons = dayButtonsContainer.querySelectorAll('.day-button');
+            allDayButtons.forEach(button => {
+                button.classList.remove('active');
+                if (button.dataset.day === activeDay) {
+                    button.classList.add('active');
+                }
+            });
+        }
+
+        // Event listeners for region buttons (modified to use navigateToDay for initial day of region)
         regionButtons.forEach(button => {
             button.addEventListener('click', () => {
-                renderRegionDays(button.dataset.region);
+                const regionKey = button.dataset.region;
+                const firstDayKey = Object.keys(itineraryData[regionKey].days)[0];
+                navigateToDay(regionKey, firstDayKey);
             });
         });
 
-        // Render the default region (London) on page load
+        // Initial load: Default to London, Day 1
         document.addEventListener('DOMContentLoaded', () => {
-            renderRegionDays('london');
+            navigateToDay('london', 'day1');
         });
     </script>
 </body>
